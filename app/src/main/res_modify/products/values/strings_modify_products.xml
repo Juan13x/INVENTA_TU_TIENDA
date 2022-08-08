@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--CODE-->
+
+    <!--UI-->
+    <!--TEXT-->
+    <string name="modifyProduct__add__text">Add</string>
+    <string name="modifyProduct__see__text">See</string>
+    <string name="modifyProduct__change__text">Change</string>
+    <string name="modifyProduct__delete__text">Delete</string>
+    <string name="modifyProduct__nameInfo__text">Name</string>
+    <string name="modifyProduct__amountInfo__text">Amount</string>
+    <string name="modifyProduct__codeInfo__text">Code</string>
+    <string name="modifyProduct__priceInfo__text">Price</string>
+    <string name="modifyProduct__categoryInfo__text">Category</string>
+    <string name="modifyProduct__upload__text">Upload</string>
+    <string name="modifyProduct__operate__text">Add</string>
+    <!--HINT-->
+    <string name="modifyProduct__name__hint">Input Name</string>
+    <string name="modifyProduct__amount__hint">Input Amount</string>
+    <string name="modifyProduct__code__hint">Input Code</string>
+    <string name="modifyProduct__price__hint">Input Price</string>
+</resources>

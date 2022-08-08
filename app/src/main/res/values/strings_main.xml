@@ -1,0 +1,11 @@
+<resources>
+    <!--CODE-->
+    <string name="tab_text_1">Log in</string>
+    <string name="tab_text_2">Products</string>
+    <string name="tab_text_3">Modify</string>
+
+    <!--UI-->
+    <!--TEXT-->
+    <string name="app_name">INVENTA TU TIENDA</string>
+    <!--HINT-->
+</resources>

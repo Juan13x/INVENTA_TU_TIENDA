@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--CODE-->
+    <string name = "signUp__differentPasswords">The passwords are different</string>
+    <string name = "signUp__warningShortPassword">Password must be longer than 6 digits</string>
+    <string name = "signUp__existingUser">The User already exist</string>
+    <string name = "signUp__wrongEmailAddress">Wrong Email Address</string>
+    <string name = "signUp__emptyPassword">Empty Password</string>
+
+    <!--UI-->
+    <!--TEXT-->
+    <string name="signUp__filter">QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklñzxcvbnm1234567890_</string>
+    <string name="signUp_signUp__text">Log In</string>
+    <string name="signUp_userInfo__text">User</string>
+    <string name="signUp_passwordInfo__text">Password</string>
+    <string name="signUp_repeatPasswordInfo__text">Confirm Password</string>
+    <!--HINT-->
+    <string name="signUp_user__hint">Input User</string>
+    <string name="signUp_password__hint">Input Password</string>
+    <string name="signUp_repeatPassword__hint">Input Password</string>
+</resources>

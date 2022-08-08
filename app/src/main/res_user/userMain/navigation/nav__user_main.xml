@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav__user_main"
+    app:startDestination="@id/logInFragment">
+
+    <fragment
+        android:id="@+id/logInFragment"
+        android:name="com.juanguicj.inventa_tu_tienda.fragments.user.login.LogInFragment"
+        android:label="fragment_log_in"
+        tools:layout="@layout/fragment_log_in" />
+    <fragment
+        android:id="@+id/signUpFragment"
+        android:name="com.juanguicj.inventa_tu_tienda.fragments.user.signup.SignUpFragment"
+        android:label="fragment_sign_up"
+        tools:layout="@layout/fragment_sign_up" />
+    <fragment
+        android:id="@+id/changePasswordFragment"
+        android:name="com.juanguicj.inventa_tu_tienda.fragments.user.changepassword.ChangePasswordFragment"
+        android:label="fragment_change_password"
+        tools:layout="@layout/fragment_change_password" />
+</navigation>

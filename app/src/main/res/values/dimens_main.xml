@@ -1,0 +1,12 @@
+<resources>
+    <!--TEXT-->
+    <dimen name="main_title_text">18sp</dimen>
+    <dimen name="main_tabs_text">16sp</dimen>
+    <!--PADDING-->
+    <dimen name="main_title_padding_endAndStart">10dp</dimen>
+</resources>
+    <!--TEXT-->
+    <!--PADDING-->
+    <!--MARGINS-->
+    <!--WIDTH-->
+    <!--HEIGHT-->

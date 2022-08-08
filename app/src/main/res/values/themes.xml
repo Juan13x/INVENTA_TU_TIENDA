@@ -1,0 +1,25 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Theme.INVENTA_TU_TIENDA" parent="Theme.AppCompat.DayNight.DarkActionBar">
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/Dark_Orange</item>
+        <item name="colorPrimaryVariant">@color/Halloween_Orange</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">@color/Bright_Gold</item>
+        <item name="colorSecondaryVariant">@color/Halloween_Orange</item>
+        <item name="colorOnSecondary">@color/black</item>
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor" >?attr/colorSecondary</item>
+        <!-- Customize your theme here. -->
+    </style>
+
+    <style name="Theme.INVENTA_TU_TIENDA.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="Theme.INVENTA_TU_TIENDA.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="Theme.INVENTA_TU_TIENDA.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+</resources>

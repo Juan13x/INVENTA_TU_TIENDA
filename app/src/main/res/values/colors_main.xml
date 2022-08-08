@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--TEXT-->
+    <color name="main_title_text">@color/white</color>
+
+    <!--BACKGROUND-->
+    <color name="main_bar_bg">@color/colorSecondary</color>
+    <color name="main_title_bg">@color/colorPrimary</color>
+    <color name="main_tabs_bg">@color/colorPrimary</color>
+    <!--STROKES-->
+    <!--GRADIENTS-->
+    <!--BORDERS-->
+</resources>
+
+    <!--TEXT-->
+    <!--BACKGROUND-->
+    <!--STROKES-->
+    <!--GRADIENTS-->
+    <!--BORDERS-->

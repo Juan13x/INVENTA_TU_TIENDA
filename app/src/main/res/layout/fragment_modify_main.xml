@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="left"
+    android:orientation="vertical"
+    tools:context=".fragments.modify.main.ModifyMainFragment">
+
+    <Button
+        android:id="@+id/modifyMain_products_Button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/modifyMain__ProductsButton__text"
+        android:textStyle="bold" />
+
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/modifyMain_products_fragmentContainerView"
+        android:name="com.juanguicj.inventa_tu_tienda.fragments.modify.products.ModifyProductsFragment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="visible"
+        tools:layout="@layout/fragment_modify_products" />
+
+    <Button
+        android:id="@+id/modifyMain_categories_Button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/modifyMain__CategoryButton__text"
+        android:textStyle="bold" />
+
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/modifyMain_categories_fragmentContainerView"
+        android:name="com.juanguicj.inventa_tu_tienda.fragments.modify.category.ModifyCategoryFragment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:layout="@layout/fragment_modify_category" />
+
+    <TextView
+        android:id="@+id/modifyMain_warning_textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/modifyMain_warning"
+        android:textColor="@color/Red"
+        android:textStyle="bold" />
+
+</LinearLayout>

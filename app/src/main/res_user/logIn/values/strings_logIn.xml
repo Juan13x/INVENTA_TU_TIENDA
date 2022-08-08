@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--CODE-->
+    <string name="logIn__warningNotExistingUser">Not Existing User</string>
+    <string name="logIn__warningEmpty">Fill in the fields</string>
+    <string name="logIn__warningWrongPassword">Incorrect Password</string>
+
+    <!--UI-->
+    <!--TEXT-->
+    <string name="logIn_logIn__text">Log In</string>
+    <string name="logIn_userInfo__text">User</string>
+    <string name="logIn_passwordInfo__text">Password</string>
+    <!--HINT-->
+    <string name="logIn_user__hint">Input User</string>
+    <string name="logIn_password__hint">Input Password</string>
+</resources>
+
+    <!--UI-->
+    <!--TEXT-->
+    <!--HINT-->

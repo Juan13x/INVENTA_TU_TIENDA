@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--UI-->
+    <!--TEXT-->
+    <string name="modifyMain__ProductsButton__text">Products</string>
+    <string name="modifyMain__CategoryButton__text">Category</string>
+    <string name="modifyMain_warning">You have no categories. Include one to modify
+        Products</string>
+</resources>

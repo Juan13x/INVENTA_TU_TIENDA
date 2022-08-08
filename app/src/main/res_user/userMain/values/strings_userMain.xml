@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--UI-->
+    <!--TEXT-->
+    <string name="signUpANDlogIn_filter">QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklñzxcvbnm1234567890_</string>
+    <string name="userMain_logIn__text">Log In</string>
+    <string name="userMain_SignUp__text">Sign Up</string>
+    <string name="userMain_changePassword__text">Change Password?</string>
+    <string name="userMain_exit__text">Exit</string>
+    <string name="userMain_selectionInfo__default_text">Select an Option from Above</string>
+    <string name="userMain_userInfo__logIn_text">Welcome %1$s</string>
+
+</resources>
+    <!--CODE-->
+
+    <!--UI-->
+    <!--TEXT-->
+    <!--HINT-->
