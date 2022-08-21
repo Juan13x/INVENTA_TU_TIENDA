@@ -13,6 +13,7 @@ import androidx.fragment.app.activityViewModels
 import com.juanguicj.inventa_tu_tienda.R
 import com.juanguicj.inventa_tu_tienda.databinding.FragmentChangePasswordBinding
 import com.juanguicj.inventa_tu_tienda.main.MainViewModel
+import com.juanguicj.inventa_tu_tienda.main.myDictionary
 
 class ChangePasswordFragment : Fragment() {
     private lateinit var changePasswordViewModel: ChangePasswordViewModel
@@ -22,8 +23,11 @@ class ChangePasswordFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View {
-        binding = FragmentChangePasswordBinding.inflate(inflater, container, false)
+    ): View = binding.root
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        binding = FragmentChangePasswordBinding.inflate(layoutInflater)
         changePasswordViewModel = ViewModelProvider(this)[ChangePasswordViewModel::class.java]
 
         with(binding){
@@ -38,37 +42,38 @@ class ChangePasswordFragment : Fragment() {
                 changePasswordViewModel.checkChange(currentPassword, newPassword, repNewPassword)
             }
 
-            changePasswordViewModel.warningCurrentPasswordLiveData.observe(viewLifecycleOwner){
+            changePasswordViewModel.warningCurrentPasswordLiveData.observe(this@ChangePasswordFragment){
                 changePasswordCurrentPasswordTextInputLayout.error = getString(R.string.changePassword__emptyField)
             }
 
-            changePasswordViewModel.warningNewPasswordLiveData.observe(viewLifecycleOwner){
+            changePasswordViewModel.warningNewPasswordLiveData.observe(this@ChangePasswordFragment){
                 changePasswordNewPasswordTextInputLayout.error = getString(R.string.changePassword__emptyField)
             }
 
-            changePasswordViewModel.warningRepeatNewPasswordLiveData.observe(viewLifecycleOwner){
+            changePasswordViewModel.warningRepeatNewPasswordLiveData.observe(this@ChangePasswordFragment){
                 changePasswordRepeatNewPasswordTextInputLayout.error = getString(R.string.changePassword__emptyField)
             }
 
-            changePasswordViewModel.successChangePasswordLiveData.observe(viewLifecycleOwner){
-                mainViewModel.setNewPassword()
+            changePasswordViewModel.successChangePasswordLiveData.observe(this@ChangePasswordFragment){
+                val newPassword = changePasswordNewPasswordTextInputEditText.text.toString()
+                mainViewModel.setNewPassword(myDictionary.getUser(), newPassword)
+
                 val text: Editable = SpannableStringBuilder("")
                 changePasswordCurrentPasswordTextInputEditText.text = text
                 changePasswordNewPasswordTextInputEditText.text = text
                 changePasswordRepeatNewPasswordTextInputEditText.text = text
+
                 val toast = Toast.makeText(activity, getString(R.string.changePassword__succesChangePassword), Toast
                     .LENGTH_SHORT)
                 toast.show()
             }
 
-            changePasswordViewModel.warningWrongLiveData.observe(viewLifecycleOwner){
+            changePasswordViewModel.warningWrongLiveData.observe(this@ChangePasswordFragment){
                     wrongOption->
                 val textForToast: String = getString(wrongOption)
                 val toast = Toast.makeText(activity, textForToast, Toast.LENGTH_SHORT)
                 toast.show()
             }
         }
-
-        return binding.root
     }
 }

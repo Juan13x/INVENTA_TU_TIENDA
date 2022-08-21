@@ -1,23 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--CODE-->
+    modifyProducts__CHANGE__confirmation
+    <string name="modifyProducts__CHANGE__confirmation">
+        Are you sure to update the next Products: Code = %1$s\n with Attributes:\n Current
+        Name:%2$s\n Current Amount:%3$d\n Current Price: %4$f\n to:\n New Name:%5$s\n New
+        Amount:%6$d\n New Price: %7$f\n From Category:%8$s
+    </string>
+    <string name="modifyProducts__ADD__confirmation">
+        The new Products has been saved successfully:\nCode: %1$s\nName: %2$s\nAmount:
+        %3$d\nPrice: %4$f\nTo Category: %5$s</string>
+    <string name="modifyProducts__DELETE__confirmation">
+        Are you detele to the following Products:\nCode: %1$s\nName: %2$s\nAmount: %3$d\nPrice:
+        %4$f\nFrom Category:%5$s
+    </string>
+    <string name="modifyProducts__emptyName__error">The field Name is empty</string>
+    <string name="modifyProducts__emptyCode__error">The field Code is empty</string>
+    <string name="modifyProducts__emptyAmount__error">The field Amount is empty</string>
+    <string name="modifyProducts__emptyPrice__error">The field Price is empty</string>
+    <string name="modifyProducts__existingCode__error">The code already Exist in this category.
+        Enter a different code</string>
+    <string name="modifyProducts__notExistingCode__error">The code is not included in this category</string>
+    <string name="modifyProducts__positiveOption__dialog">OK</string>
+    <string name="modifyProducts__negativeOption__dialog">cancel</string>
 
     <!--UI-->
+    <!--Filters-->
+    <string name="modifyProducts__filter">QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjkl
+        ñzxcvbnm1234567890_</string>
     <!--TEXT-->
-    <string name="modifyProduct__add__text">Add</string>
-    <string name="modifyProduct__see__text">See</string>
-    <string name="modifyProduct__change__text">Change</string>
-    <string name="modifyProduct__delete__text">Delete</string>
-    <string name="modifyProduct__nameInfo__text">Name</string>
-    <string name="modifyProduct__amountInfo__text">Amount</string>
-    <string name="modifyProduct__codeInfo__text">Code</string>
-    <string name="modifyProduct__priceInfo__text">Price</string>
-    <string name="modifyProduct__categoryInfo__text">Category</string>
-    <string name="modifyProduct__upload__text">Upload</string>
-    <string name="modifyProduct__operate__text">Add</string>
+    <string name="modifyProducts__add__text">Add</string>
+    <string name="modifyProducts__see__text">See</string>
+    <string name="modifyProducts__change__text">Change</string>
+    <string name="modifyProducts__delete__text">Delete</string>
+    <string name="modifyProducts__nameInfo__text">Name</string>
+    <string name="modifyProducts__newNameInfo__text">New Name</string>
+    <string name="modifyProducts__amountInfo__text">Amount</string>
+    <string name="modifyProducts__newAmountInfo__text">new Amount</string>
+    <string name="modifyProducts__oldCodeInfo__text">Old Code</string>
+    <string name="modifyProducts__codeInfo__text">Code</string>
+    <string name="modifyProducts__newCodeInfo__text">new Code</string>
+    <string name="modifyProducts__priceInfo__text">Price</string>
+    <string name="modifyProducts__newPriceInfo__text">new Price</string>
+    <string name="modifyProducts__categoryInfo__text">Category</string>
+    <string name="modifyProducts__newCategoryInfo__text">New Category</string>
+    <string name="modifyProducts__upload__text">Upload</string>
+    <string name="modifyProducts__newQuery__text">New Query</string>
+    <string name="modifyProducts__operate__add__text">Add</string>
+    <string name="modifyProducts__operate__see__text">See</string>
+    <string name="modifyProducts__operate__change__text">change</string>
+    <string name="modifyProducts__operate__delete__text">Delete</string>
     <!--HINT-->
-    <string name="modifyProduct__name__hint">Input Name</string>
-    <string name="modifyProduct__amount__hint">Input Amount</string>
-    <string name="modifyProduct__code__hint">Input Code</string>
-    <string name="modifyProduct__price__hint">Input Price</string>
+    <string name="modifyProducts__name__hint">Input Name</string>
+    <string name="modifyProducts__amount__hint">Input Amount</string>
+    <string name="modifyProducts__code__hint">Input Code</string>
+    <string name="modifyProducts__price__hint">Input Price</string>
+    <string name="modifyProducts__newName__hint">Input new Name</string>
+    <string name="modifyProducts__newAmount__hint">Input new Amount</string>
+    <string name="modifyProducts__newCode__hint">Input new Code</string>
+    <string name="modifyProducts__newPrice__hint">Input new Price</string>
 </resources>

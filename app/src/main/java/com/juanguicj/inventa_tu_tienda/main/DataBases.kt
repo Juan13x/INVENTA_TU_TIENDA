@@ -47,28 +47,28 @@ class PersistentClass{
         
         this.setProduct(
             "Comida",
-            "230",
+            "201",
             ProductsType("Arroz libra", 25, 2000.0f))
         this.setProduct(
             "Comida",
-            "240",
+            "202",
             ProductsType("Leche Colanta", 8, 3600.0f))
         this.setProduct(
             "Comida",
-            "250",
+            "203",
             ProductsType("Lecherita tubito", 26, 800.0f))
 
         this.setProduct(
             "Revuelto",
-            "135",
+            "301",
             ProductsType("Tomate", 2, 2200.0f))
         this.setProduct(
             "Revuelto",
-            "105",
+            "302",
             ProductsType("Papa", 10, 1700.0f))
         this.setProduct(
             "Revuelto",
-            "136",
+            "303",
             ProductsType("Limon", 3, 2500.0f))
         return false
     }
@@ -107,7 +107,9 @@ class PersistentClass{
      * Returns the Categories
      */
     fun getCategories(): MutableSet<String>{
-        return this.dictionary.keys
+        val keys = this.dictionary.keys
+        keys.remove("")
+        return keys
     }
 
     /**
@@ -167,8 +169,11 @@ class PersistentClass{
      * if null is because the category does not exist
      */
     fun getAllProducts(category: String): MutableMap<String, ProductsType>?{
-        return if(containsCategory(category))
-            this.dictionary[category]
+        return if(containsCategory(category)) {
+            val products = this.dictionary[category]
+            products?.remove("")
+            products
+        }
         else
             null
     }
@@ -192,70 +197,70 @@ class DataBaseClass{
      */
     fun create():Boolean {
         this.addUser("Juan")
-        this.setPassword("Juan", "genshin")
+        this.setPassword("Juan", "111")
         this.addUser("Luis")
-        this.setPassword("Luis", "impact")
+        this.setPassword("Luis", "222")
         this.addUser("Karen")
-        this.setPassword("Karen", "Cool")
+        this.setPassword("Karen", "333")
         for (user in this.users.keys) {
-            this.addCategory(user, "Aseo")
-            this.addCategory(user, "Comida")
-            this.addCategory(user, "Revuelto")
+            this.addCategory(user, "Aseo1")
+            this.addCategory(user, "Comida2")
+            this.addCategory(user, "Revuelto3")
 
             this.setProduct(
                 user,
                 "Aseo",
-                "135",
+                "110",
                 ProductsType("Fabuloso 400ml", 12, 1400.0f)
             )
             this.setProduct(
                 user,
                 "Aseo",
-                "105",
+                "120",
                 ProductsType("Limpido 400ml", 10, 1300.0f)
             )
             this.setProduct(
                 user,
                 "Aseo",
-                "136",
+                "130",
                 ProductsType("Fabuloso 250ml", 20, 1000.0f)
             )
 
             this.setProduct(
                 user,
                 "Comida",
-                "230",
+                "210",
                 ProductsType("Arroz libra", 25, 2000.0f)
             )
             this.setProduct(
                 user,
                 "Comida",
-                "240",
+                "220",
                 ProductsType("Leche Colanta", 8, 3600.0f)
             )
             this.setProduct(
                 user,
                 "Comida",
-                "250",
+                "230",
                 ProductsType("Lecherita tubito", 26, 800.0f)
             )
 
             this.setProduct(
                 user,
                 "Revuelto",
-                "135",
+                "310",
                 ProductsType("Tomate", 2, 2200.0f)
             )
             this.setProduct(
                 user,
                 "Revuelto",
-                "105",
+                "320",
                 ProductsType("Papa", 10, 1700.0f)
             )
             this.setProduct(
                 user,
                 "Revuelto",
-                "136",
+                "330",
                 ProductsType("Limon", 3, 2500.0f)
             )
         }
@@ -296,7 +301,9 @@ class DataBaseClass{
      * Returns all User Keys
      */
     fun getAllUsers(): MutableSet<String> {
-        return this.users.keys
+        val users = this.users.keys
+        users.remove("")
+        return users
     }
 
     /**
@@ -391,7 +398,9 @@ class DataBaseClass{
      */
     fun getCategories(user: String): MutableSet<String>?{
         return if(containsUser(user)){
-            this.users[user]?.products?.keys
+            val categories = this.users[user]?.products?.keys
+            categories?.remove("")
+            categories
         } else null
     }
 
@@ -465,7 +474,9 @@ class DataBaseClass{
     fun getAllProducts(user: String, category: String): MutableMap<String, ProductsType>?{
         val check: Int = containsCategory(user, category)
         if(check == 1){
-            return this.users[user]?.products?.get(category)
+            val products = this.users[user]?.products?.get(category)
+            products?.remove("")
+            return products
         }
         return mutableMapOf("null" to ProductsType("", check, 0.0f))
     }

@@ -19,6 +19,7 @@ class SplashActivity : AppCompatActivity() {
             timerTask {
                 intent = Intent(this@SplashActivity, MainActivity::class.java)
                 startActivity(intent)
+                finish()
             }
         ,2000
         )

@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="left"
+    android:gravity="start"
     android:orientation="vertical"
     tools:context=".fragments.modify.main.ModifyMainFragment">
 
@@ -19,7 +19,6 @@
         android:name="com.juanguicj.inventa_tu_tienda.fragments.modify.products.ModifyProductsFragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="visible"
         tools:layout="@layout/fragment_modify_products" />
 
     <Button
@@ -28,7 +27,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:text="@string/modifyMain__CategoryButton__text"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        tools:ignore="DuplicateSpeakableTextCheck" />
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/modifyMain_categories_fragmentContainerView"

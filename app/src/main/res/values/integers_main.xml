@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer name="max_length_password">20</integer>
+    <integer name="max_length_email">50</integer>
+    <integer name="max_length_code">20</integer>
+    <integer name="max_length_name">40</integer>
+    <integer name="max_length_price">9</integer>
+    <integer name="max_length_amount">6</integer>
+    <integer name="max_length_category">20</integer>
+</resources>

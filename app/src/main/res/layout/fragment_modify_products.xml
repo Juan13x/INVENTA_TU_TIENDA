@@ -7,208 +7,366 @@
     tools:context=".fragments.modify.products.ModifyProductsFragment">
 
     <Button
-        android:id="@+id/modifyProduct_delete_button"
+        android:id="@+id/modifyProducts_delete_button"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:text="@string/modifyProduct__delete__text"
+        android:text="@string/modifyProducts__delete__text"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/modifyProduct_change_button"
-        app:layout_constraintTop_toTopOf="@+id/modifyProduct_change_button" />
+        app:layout_constraintStart_toEndOf="@+id/modifyProducts_change_button"
+        app:layout_constraintTop_toTopOf="@+id/modifyProducts_change_button" />
 
     <Button
-        android:id="@+id/modifyProduct_see_button"
+        android:id="@+id/modifyProducts_see_button"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:text="@string/modifyProduct__see__text"
+        android:text="@string/modifyProducts__see__text"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/modifyProduct_add_button"
-        app:layout_constraintTop_toTopOf="@+id/modifyProduct_add_button" />
+        app:layout_constraintStart_toEndOf="@+id/modifyProducts_add_button"
+        app:layout_constraintTop_toTopOf="@+id/modifyProducts_add_button" />
 
     <Button
-        android:id="@+id/modifyProduct_add_button"
+        android:id="@+id/modifyProducts_add_button"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
-        android:text="@string/modifyProduct__add__text"
+        android:text="@string/modifyProducts__add__text"
         android:textStyle="bold"
-        app:layout_constraintEnd_toStartOf="@+id/modifyProduct_see_button"
+        app:layout_constraintEnd_toStartOf="@+id/modifyProducts_see_button"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="DuplicateSpeakableTextCheck" />
 
     <Button
-        android:id="@+id/modifyProduct_change_button"
+        android:id="@+id/modifyProducts_change_button"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:text="@string/modifyProduct__change__text"
+        android:text="@string/modifyProducts__change__text"
         android:textStyle="bold"
-        app:layout_constraintEnd_toStartOf="@+id/modifyProduct_delete_button"
+        app:layout_constraintEnd_toStartOf="@+id/modifyProducts_delete_button"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/modifyProduct_add_button" />
+        app:layout_constraintTop_toBottomOf="@+id/modifyProducts_add_button" />
 
     <Button
-        android:id="@+id/modifyProduct_operate_button"
+        android:id="@+id/modifyProducts_operate_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="@string/modifyProduct__operate__text"
+        android:text="@string/modifyProducts__operate__add__text"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/modifyProduct_input_linearLayout" />
+        app:layout_constraintTop_toBottomOf="@+id/modifyProducts_scrollView" />
 
-    <LinearLayout
-        android:id="@+id/modifyProduct_input_linearLayout"
+    <ScrollView
+        android:id="@+id/modifyProducts_scrollView"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="400dp"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="16dp"
-        android:gravity="center"
-        android:orientation="vertical"
+        android:layout_marginEnd="8dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/modifyProduct_change_button">
+        app:layout_constraintTop_toBottomOf="@+id/modifyProducts_delete_button">
 
-        <TextView
-            android:id="@+id/modifyProducts_categoryInfo_textView"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:text="@string/modifyProduct__categoryInfo__text"
-            android:textColor="@color/Black"
-            android:textStyle="bold" />
-
-        <Spinner
-            android:id="@+id/modifyProduct_category_spinner"
+        <LinearLayout
+            android:id="@+id/modifyProducts_input_linearLayout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/modifyProducts_codeInfo_textView"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginTop="8dp"
-            android:text="@string/modifyProduct__codeInfo__text"
-            android:textColor="@color/Black"
-            android:textStyle="bold" />
+            <TextView
+                android:id="@+id/modifyProducts_categoryInfo_textView"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="@string/modifyProducts__categoryInfo__text"
+                android:textColor="@color/Black"
+                android:textStyle="bold" />
 
-        <EditText
-            android:id="@+id/modifyProduct_code_editText"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:ems="10"
-            android:gravity="center"
-            android:hint="@string/modifyProduct__code__hint"
-            android:importantForAutofill="no"
-            android:inputType="textPersonName|textEmailAddress"
-            android:textColorHint="@color/Dark_Orange"
-            android:textStyle="bold"
-            tools:ignore="TouchTargetSizeCheck,TextContrastCheck" />
+            <Spinner
+                android:id="@+id/modifyProducts_category_spinner"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:gravity="center"
+                tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
 
-        <Button
-            android:id="@+id/modifyProducts_upload_button"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginTop="8dp"
-            android:text="@string/modifyProduct__upload__text"
-            android:textColor="@color/Black"
-            android:textStyle="bold"
-            android:visibility="visible" />
+            <TextView
+                android:id="@+id/modifyProducts_codeInfo_textView"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginTop="8dp"
+                android:text="@string/modifyProducts__codeInfo__text"
+                android:textColor="@color/Black"
+                android:textStyle="bold" />
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/modifyProduct_constraintLayout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="8dp">
+            <EditText
+                android:id="@+id/modifyProducts_code_editText"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:digits="@string/modifyProducts__filter"
+                android:ems="10"
+                android:gravity="center"
+                android:hint="@string/modifyProducts__code__hint"
+                android:importantForAutofill="no"
+                android:inputType="textPersonName|textEmailAddress"
+                android:maxLength="@integer/max_length_code"
+                android:textColorHint="@color/Dark_Orange"
+                android:textStyle="bold"
+                tools:ignore="TouchTargetSizeCheck,TextContrastCheck" />
 
             <LinearLayout
-                android:id="@+id/modifyProduct_linearLayout2"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/modifyProducts_amountInfo_textView">
+                android:id="@+id/modifyProducts_Query_linearLayout"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginTop="8dp"
+                android:orientation="horizontal">
 
-                <EditText
-                    android:id="@+id/modifyProduct_price_editText"
-                    android:layout_width="match_parent"
-                    android:layout_height="43dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_weight="0.6"
-                    android:ems="10"
-                    android:hint="@string/modifyProduct__price__hint"
-                    android:importantForAutofill="no"
-                    android:inputType="number"
-                    android:textColorHint="@color/Dark_Orange"
-                    android:textStyle="bold"
-                    tools:ignore="TouchTargetSizeCheck,TextContrastCheck" />
-
-                <EditText
-                    android:id="@+id/modifyProduct_amount_editText"
-                    android:layout_width="match_parent"
-                    android:layout_height="44dp"
-                    android:layout_marginStart="8dp"
-                    android:layout_weight="0.6"
-                    android:ems="10"
-                    android:gravity="center|end"
-                    android:hint="@string/modifyProduct__amount__hint"
-                    android:importantForAutofill="no"
-                    android:inputType="numberDecimal"
-                    android:textColorHint="@color/Dark_Orange"
-                    android:textStyle="bold"
+                <Button
+                    android:id="@+id/modifyProducts_NewQuery_Button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="@string/modifyProducts__newQuery__text"
                     tools:ignore="TouchTargetSizeCheck" />
+
+                <Button
+                    android:id="@+id/modifyProducts_Upload_Button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="@string/modifyProducts__upload__text" />
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/modifyProducts_amountInfo_textView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="4dp"
-                android:text="@string/modifyProduct__amountInfo__text"
-                android:textColor="@color/Black"
-                android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="@+id/modifyProduct_linearLayout2"
-                app:layout_constraintTop_toTopOf="@+id/modifyProducts_priceInfo_textView" />
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/modifyProducts_constraintLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="8dp">
+
+                <LinearLayout
+                    android:id="@+id/modifyProducts_linearLayout2"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/modifyProducts_amountInfo_textView">
+
+                    <EditText
+                        android:id="@+id/modifyProducts_price_editText"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_marginEnd="8dp"
+                        android:layout_weight="0.6"
+                        android:ems="10"
+                        android:hint="@string/modifyProducts__price__hint"
+                        android:importantForAutofill="no"
+                        android:inputType="numberDecimal"
+                        android:maxLength="@integer/max_length_price"
+                        android:textColorHint="@color/Dark_Orange"
+                        android:textStyle="bold"
+                        tools:ignore="TouchTargetSizeCheck,TextContrastCheck" />
+
+                    <EditText
+                        android:id="@+id/modifyProducts_amount_editText"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_weight="0.6"
+                        android:ems="10"
+                        android:gravity="center|end"
+                        android:hint="@string/modifyProducts__amount__hint"
+                        android:importantForAutofill="no"
+                        android:inputType="number"
+                        android:maxLength="@integer/max_length_amount"
+                        android:textColorHint="@color/Dark_Orange"
+                        android:textStyle="bold"
+                        tools:ignore="TouchTargetSizeCheck" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/modifyProducts_amountInfo_textView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="4dp"
+                    android:text="@string/modifyProducts__amountInfo__text"
+                    android:textColor="@color/Black"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toEndOf="@+id/modifyProducts_linearLayout2"
+                    app:layout_constraintTop_toTopOf="@+id/modifyProducts_priceInfo_textView" />
+
+                <TextView
+                    android:id="@+id/modifyProducts_priceInfo_textView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:text="@string/modifyProducts__priceInfo__text"
+                    android:textColor="@color/Black"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="@+id/modifyProducts_linearLayout2"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <TextView
-                android:id="@+id/modifyProducts_priceInfo_textView"
+                android:id="@+id/modifyProducts_nameInfo_textView"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginTop="8dp"
+                android:text="@string/modifyProducts__nameInfo__text"
+                android:textColor="@color/Black"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/modifyProducts_name_editText"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:digits="@string/modifyProducts__filter"
+                android:ems="10"
+                android:gravity="center"
+                android:hint="@string/modifyProducts__name__hint"
+                android:importantForAutofill="no"
+                android:inputType="textPersonName"
+                android:maxLength="@integer/max_length_name"
+                android:textColorHint="@color/Dark_Orange"
+                android:textStyle="bold"
+                tools:ignore="TouchTargetSizeCheck,TextContrastCheck" />
+
+            <TextView
+                android:id="@+id/modifyProducts_newCategoryInfo_textView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:text="@string/modifyProduct__priceInfo__text"
+                android:layout_marginTop="8dp"
+                android:text="@string/modifyProducts__newCategoryInfo__text"
                 android:textColor="@color/Black"
+                android:textStyle="bold" />
+
+            <Spinner
+                android:id="@+id/modifyProducts_newCategory_spinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                tools:ignore="SpeakableTextPresentCheck" />
+
+            <TextView
+                android:id="@+id/modifyProducts_oldCodeInfo_textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="@string/modifyProducts__oldCodeInfo__text"
+                android:textColor="@color/black"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/modifyProducts_oldCode_textView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textColor="@color/black"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/modifyProducts_newCodeInfo_textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="@string/modifyProducts__newCodeInfo__text"
+                android:textColor="@color/black"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/modifyProducts_newCode_editText"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:digits="@string/modifyProducts__filter"
+                android:ems="10"
+                android:gravity="center"
+                android:hint="@string/modifyProducts__newCode__hint"
+                android:importantForAutofill="no"
+                android:inputType="textPersonName"
+                android:textColor="@color/black"
+                android:textColorHint="@color/colorSecondary"
                 android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="@+id/modifyProduct_linearLayout2"
-                app:layout_constraintTop_toTopOf="parent" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
+                tools:ignore="TouchTargetSizeCheck" />
 
-        <TextView
-            android:id="@+id/modifyProduct_nameInfo_textView"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginTop="8dp"
-            android:text="@string/modifyProduct__nameInfo__text"
-            android:textColor="@color/Black"
-            android:textStyle="bold" />
+            <TextView
+                android:id="@+id/modifyProducts_newNameInfo_textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="@string/modifyProducts__newNameInfo__text"
+                android:textColor="@color/black"
+                android:textStyle="bold" />
 
-        <EditText
-            android:id="@+id/modifyProduct_name_editText"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:ems="10"
-            android:gravity="center"
-            android:hint="@string/modifyProduct__name__hint"
-            android:importantForAutofill="no"
-            android:inputType="textPersonName"
-            android:textColorHint="@color/Dark_Orange"
-            android:textStyle="bold"
-            tools:ignore="TouchTargetSizeCheck,TextContrastCheck" />
-    </LinearLayout>
+            <EditText
+                android:id="@+id/modifyProducts_newName_editText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:digits="@string/modifyProducts__filter"
+                android:ems="10"
+                android:gravity="center"
+                android:hint="@string/modifyProducts__newName__hint"
+                android:importantForAutofill="no"
+                android:inputType="textPersonName"
+                android:textColor="@color/black"
+                android:textColorHint="@color/colorSecondary"
+                android:textStyle="bold"
+                tools:ignore="TouchTargetSizeCheck" />
+
+            <TextView
+                android:id="@+id/modifyProducts_newPriceInfo_textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/modifyProducts__newPriceInfo__text"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                tools:layout_editor_absoluteX="-31dp"
+                tools:layout_editor_absoluteY="636dp" />
+
+            <EditText
+                android:id="@+id/modifyProducts_newPrice_editText"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:ems="10"
+                android:gravity="center"
+                android:hint="@string/modifyProducts__newPrice__hint"
+                android:importantForAutofill="no"
+                android:inputType="numberDecimal"
+                android:textColor="@color/black"
+                android:textColorHint="@color/colorSecondary"
+                android:textStyle="bold"
+                tools:ignore="TouchTargetSizeCheck" />
+
+            <TextView
+                android:id="@+id/modifyProducts_newAmountInfo_textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="@string/modifyProducts__newAmountInfo__text"
+                android:textColor="@color/black"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/modifyProducts_newAmount_editText"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:ems="10"
+                android:gravity="center"
+                android:hint="@string/modifyProducts__newAmount__hint"
+                android:importantForAutofill="no"
+                android:inputType="number"
+                android:textColor="@color/black"
+                android:textColorHint="@color/colorSecondary"
+                android:textStyle="bold"
+                tools:ignore="TouchTargetSizeCheck" />
+
+        </LinearLayout>
+    </ScrollView>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

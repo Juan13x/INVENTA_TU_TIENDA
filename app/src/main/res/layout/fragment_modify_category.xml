@@ -7,7 +7,7 @@
     tools:context=".fragments.modify.category.ModifyCategoryFragment">
 
     <EditText
-        android:id="@+id/editTextTextPersonName3"
+        android:id="@+id/modifyCategories_newCategory_editText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="48dp"
@@ -16,20 +16,21 @@
         android:ems="10"
         android:gravity="center"
         android:inputType="textPersonName"
-        android:text="Name"
+        android:maxLength="@integer/max_length_category"
+        android:text="@string/modifyCategories__newCategory__hint"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView"
+        app:layout_constraintTop_toBottomOf="@+id/modifyCategories_newCategoryInfo_textView"
         tools:ignore="TouchTargetSizeCheck" />
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/modifyCategories_selectedCategoryInfo_textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="TextView"
+        android:text="@string/modifyCategories__selectedCategoryInfo__text"
         android:textColor="@color/Black"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
@@ -38,40 +39,40 @@
         app:layout_constraintTop_toBottomOf="@+id/modifyCategories_rename_button" />
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/modifyCategories_newCategoryInfo_textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
-        android:text="TextView"
+        android:text="@string/modifyCategories__newCategoryInfo__text"
         android:textColor="@color/Black"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.501"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/spinner" />
+        app:layout_constraintTop_toBottomOf="@+id/modifyCategories_selectedCategory_spinner" />
 
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/modifyCategories_operate_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="Button"
+        android:text="@string/modifyCategories__operate__defaultText"
         android:textColor="@color/Black"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.501"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextTextPersonName3" />
+        app:layout_constraintTop_toBottomOf="@+id/modifyCategories_newCategory_editText" />
 
     <Spinner
-        android:id="@+id/spinner"
+        android:id="@+id/modifyCategories_selectedCategory_spinner"
         android:layout_width="0dp"
         android:layout_height="35dp"
         android:layout_marginTop="4dp"
-        app:layout_constraintEnd_toEndOf="@+id/editTextTextPersonName3"
+        app:layout_constraintEnd_toEndOf="@+id/modifyCategories_newCategory_editText"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/editTextTextPersonName3"
-        app:layout_constraintTop_toBottomOf="@+id/textView2"
+        app:layout_constraintStart_toStartOf="@+id/modifyCategories_newCategory_editText"
+        app:layout_constraintTop_toBottomOf="@+id/modifyCategories_selectedCategoryInfo_textView"
         tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
 
     <Button
@@ -81,7 +82,7 @@
         android:layout_marginStart="4dp"
         android:layout_marginEnd="4dp"
         android:layout_weight="1"
-        android:text="Button"
+        android:text="@string/modifyCategories__erase__text"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/modifyCategories_rename_button"
@@ -94,7 +95,7 @@
         android:layout_marginStart="4dp"
         android:layout_marginEnd="4dp"
         android:layout_weight="1"
-        android:text="Button"
+        android:text="@string/modifyCategories__rename__text"
         android:textStyle="bold"
         app:layout_constraintEnd_toStartOf="@+id/modifyCategories_delete_button"
         app:layout_constraintStart_toEndOf="@+id/modifyCategories_add_button"
@@ -107,7 +108,7 @@
         android:layout_marginStart="4dp"
         android:layout_marginEnd="4dp"
         android:layout_weight="1"
-        android:text="Button"
+        android:text="@string/modifyCategories__add__text"
         android:textStyle="bold"
         app:layout_constraintEnd_toStartOf="@+id/modifyCategories_rename_button"
         app:layout_constraintStart_toStartOf="parent"

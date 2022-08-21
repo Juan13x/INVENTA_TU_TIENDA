@@ -27,9 +27,12 @@ class SignUpFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View {
-        binding = FragmentSignUpBinding.inflate(layoutInflater, container, false)
-        val view = binding.root
+    ): View = binding.root
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        binding = FragmentSignUpBinding.inflate(layoutInflater)
+
         signUPViewModel = ViewModelProvider(this)[SignUpViewModel::class.java]
 
         with(binding){
@@ -43,28 +46,27 @@ class SignUpFragment : Fragment() {
                 signUPViewModel.checkSignUp(user, password, repPassword)
             }
 
-            signUPViewModel.warningUserLiveData.observe(viewLifecycleOwner){
+            signUPViewModel.warningUserLiveData.observe(this@SignUpFragment){
                 warningEmpty(signUpUserEditText)
             }
 
-            signUPViewModel.warningPasswordLiveData.observe(viewLifecycleOwner){
+            signUPViewModel.warningPasswordLiveData.observe(this@SignUpFragment){
                 signUpPasswordTextInputLayout.error = getString(R.string.signUp__emptyPassword)
             }
 
-            signUPViewModel.warningRepeatPasswordLiveData.observe(viewLifecycleOwner){
+            signUPViewModel.warningRepeatPasswordLiveData.observe(this@SignUpFragment){
                 signUpPasswordTextInputLayout.error = getString(R.string.signUp__emptyPassword)
             }
 
-            signUPViewModel.successSignUpLiveData.observe(viewLifecycleOwner){
+            signUPViewModel.successSignUpLiveData.observe(this@SignUpFragment){
                 mainViewModel.setSignUp(signUpUserEditText.text.toString(),
                     signUpPasswordTextInputEditText.text.toString())
-                val text: Editable = SpannableStringBuilder("")
-                signUpUserEditText.text = text
-                signUpPasswordTextInputEditText.text = text
-                signUpRepeatPasswordTextInputEditText.text = text
+                signUpUserEditText.setText("")
+                signUpPasswordTextInputEditText.setText("")
+                signUpRepeatPasswordTextInputEditText.setText("")
             }
 
-            signUPViewModel.warningWrongLiveData.observe(viewLifecycleOwner){
+            signUPViewModel.warningWrongLiveData.observe(this@SignUpFragment){
                     warningWrong->
                 val textForToast = getString(warningWrong)
                 val toast = Toast.makeText(activity, textForToast,
@@ -72,7 +74,7 @@ class SignUpFragment : Fragment() {
                 toast.show()
             }
         }
-        return view
+
     }
 
     private fun warningEmpty(view: EditText){

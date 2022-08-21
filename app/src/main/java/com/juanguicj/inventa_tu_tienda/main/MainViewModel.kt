@@ -5,19 +5,25 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
 class MainViewModel: ViewModel() {
+    private val categoryChangeMutableLiveData: MutableLiveData<Boolean> = MutableLiveData()
+    val categoryChangeLiveData: MutableLiveData<Boolean> = categoryChangeMutableLiveData
     private val logInMainMutableLiveData: MutableLiveData<Boolean> = MutableLiveData()
     val logInMainLiveData: LiveData<Boolean> = logInMainMutableLiveData
 
+    fun setCategoryChange(){
+        categoryChangeMutableLiveData.value = true
+    }
+
     fun setLogin(user: String){
         myDictionary.setUser(user)
+        myDictionary.clearCategory()
         logInMainMutableLiveData.value = true
     }
 
     fun setSignUp(user: String, password:String){
-        myDictionary.setUser(user)
         myDataBase.addUser(user)
         myDataBase.setPassword(user, password)
-        logInMainMutableLiveData.value = true
+        setLogin(user)
     }
 
     fun clearLoginMain(){
@@ -26,7 +32,7 @@ class MainViewModel: ViewModel() {
         logInMainMutableLiveData.value = false
     }
 
-    fun setNewPassword() {
-
+    fun setNewPassword(user: String, newPassword: String) {
+        myDataBase.setPassword(user, newPassword)
     }
 }

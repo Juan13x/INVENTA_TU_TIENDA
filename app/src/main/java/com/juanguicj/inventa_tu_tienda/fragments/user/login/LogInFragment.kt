@@ -21,24 +21,26 @@ class LogInFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View {
-        binding = FragmentLogInBinding.inflate(inflater, container, false)
-        val view = binding.root
+    ): View = binding.root
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        binding = FragmentLogInBinding.inflate(layoutInflater)
         logInViewModel = ViewModelProvider(this)[LogInViewModel::class.java]
 
         with(binding){
-            logInViewModel.warningLiveData.observe(viewLifecycleOwner){
+            logInViewModel.warningLiveData.observe(this@LogInFragment){
                     warning->
                 warningTextView.text = getString(warning)
             }
 
-            logInViewModel.successLogInLiveData.observe(viewLifecycleOwner){
+            logInViewModel.successLogInLiveData.observe(this@LogInFragment){
                 mainViewModel.setLogin(
                     logInUserEditText.text.toString()
                 )
-                val text: Editable = SpannableStringBuilder("")
-                logInUserEditText.text = text
-                loginPasswordTextInputEditText.text = text
+                logInUserEditText.setText("4")
+                loginPasswordTextInputEditText.setText("5")
                 warningTextView.text = ""
             }
 
@@ -47,8 +49,5 @@ class LogInFragment : Fragment() {
                     loginPasswordTextInputEditText.text.toString())
             }
         }
-
-        return view
     }
-
 }

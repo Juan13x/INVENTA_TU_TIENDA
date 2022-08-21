@@ -28,6 +28,7 @@
         android:ems="10"
         android:hint="@string/signUp_user__hint"
         android:inputType="textEmailAddress"
+        android:maxLength="@integer/max_length_email"
         android:textColor="@color/Black"
         android:textColorHint="@color/Dark_Orange"
         android:textStyle="bold"
@@ -71,6 +72,7 @@
             android:layout_height="wrap_content"
             android:digits="@string/signUpANDlogIn_filter"
             android:inputType="textVisiblePassword|textPassword"
+            android:maxLength="@integer/max_length_password"
             android:textStyle="bold"
             tools:ignore="DuplicateSpeakableTextCheck,TextContrastCheck" />
     </com.google.android.material.textfield.TextInputLayout>
@@ -120,6 +122,7 @@
             android:layout_height="wrap_content"
             android:digits="@string/signUpANDlogIn_filter"
             android:inputType="textVisiblePassword"
+            android:maxLength="@integer/max_length_password"
             android:textStyle="bold"
             tools:ignore="DuplicateSpeakableTextCheck,TextContrastCheck" />
     </com.google.android.material.textfield.TextInputLayout>

@@ -11,7 +11,7 @@
     <string name="logIn_userInfo__text">User</string>
     <string name="logIn_passwordInfo__text">Password</string>
     <!--HINT-->
-    <string name="logIn_user__hint">Input User</string>
+    <string name="logIn_user__hint">Input Email</string>
     <string name="logIn_password__hint">Input Password</string>
 </resources>
 

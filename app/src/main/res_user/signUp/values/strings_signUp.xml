@@ -15,7 +15,7 @@
     <string name="signUp_passwordInfo__text">Password</string>
     <string name="signUp_repeatPasswordInfo__text">Confirm Password</string>
     <!--HINT-->
-    <string name="signUp_user__hint">Input User</string>
+    <string name="signUp_user__hint">Input Email</string>
     <string name="signUp_password__hint">Input Password</string>
     <string name="signUp_repeatPassword__hint">Input Password</string>
 </resources>
