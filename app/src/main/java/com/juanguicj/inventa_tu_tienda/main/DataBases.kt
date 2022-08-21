@@ -34,15 +34,15 @@ class PersistentClass{
         
         this.setProduct(
             "Aseo",
-            "135",
+            "101",
             ProductsType("Fabuloso 400ml", 12, 1400.0f))
         this.setProduct(
             "Aseo",
-            "105",
+            "102",
             ProductsType("Limpido 400ml", 10, 1300.0f))
         this.setProduct(
             "Aseo",
-            "136",
+            "103",
             ProductsType("Fabuloso 250ml", 20, 1000.0f))
         
         this.setProduct(

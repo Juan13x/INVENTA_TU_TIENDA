@@ -27,8 +27,11 @@ class ModifyProductsFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View {
-        binding = FragmentModifyProductsBinding.inflate(inflater, container, false)
+    ): View = binding.root
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        binding = FragmentModifyProductsBinding.inflate(layoutInflater)
         modifyProductsViewModel = ViewModelProvider(this)[ModifyProductsViewModel::class.java]
         val builder: AlertDialog.Builder? = activity?.let {
             AlertDialog.Builder(it)
@@ -44,7 +47,7 @@ class ModifyProductsFragment : Fragment() {
                 }
                 setSpinnerEntries(modifyProductsCategorySpinner)
 
-                errorLiveData.observe(viewLifecycleOwner) { error ->
+                errorLiveData.observe(this@ModifyProductsFragment) { error ->
                     val toast = Toast.makeText(
                         requireContext().applicationContext,
                         error,
@@ -57,38 +60,37 @@ class ModifyProductsFragment : Fragment() {
                     enableMainFields()
                     visibilityWhenSee()
                     disableInformativeFields()
+                    modifyProductsCodeEditText.setText("")
                     modifyProductsOperateButton.text = getString(R.string.modifyProducts__operate__see__text)
                     buttonOperationWhenSee()
-                    confirmationWhenSee()
                 }
                 modifyProductsChangeButton.setOnClickListener {
                     enableMainFields()
                     visibilityWhenChange()
                     disableInformativeFields()
+                    modifyProductsCodeEditText.setText("")
                     modifyProductsOperateButton.text = getString(R.string.modifyProducts__operate__change__text)
                     buttonOperationWhenChange()
-                    confirmationWhenUploadOnChange()
-                    confirmationToAskToChange()
-                    confirmationWhenChange()
                 }
                 modifyProductsAddButton.setOnClickListener {
                     enableMainFields()
                     visibilityWhenAdd()
                     enableInformativeFields()
+                    clearAllFields()
                     modifyProductsOperateButton.text = getString(R.string.modifyProducts__operate__add__text)
                     buttonOperationWhenAdd()
-                    confirmationWhenAdd(builder)
                 }
                 modifyProductsDeleteButton.setOnClickListener {
                     enableMainFields()
                     visibilityWhenDelete()
                     modifyProductsOperateButton.text = getString(R.string.modifyProducts__operate__delete__text)
+                    buttonOperationWhenDelete()
                 }
 
-                mainViewModel.categoryChangeLiveData.observe(viewLifecycleOwner) {
+                mainViewModel.categoryChangeLiveData.observe(this@ModifyProductsFragment) {
                     setSpinnerEntries(modifyProductsCategorySpinner)
                 }
-                mainViewModel.logInMainLiveData.observe(viewLifecycleOwner) { logIn ->
+                mainViewModel.logInMainLiveData.observe(this@ModifyProductsFragment) { logIn ->
                     if (logIn) {
                         modifyProductsViewModel.linkFunctionGetUpdatedCategoriesToDataBase()
                     } else {
@@ -96,46 +98,48 @@ class ModifyProductsFragment : Fragment() {
                     }
                     setSpinnerEntries(modifyProductsCategorySpinner)
                 }
+
+                confirmationADDLiveData.observe(this@ModifyProductsFragment){
+                    confirmationWhenAdd(builder)
+                }
+                confirmationUploadCHANGELiveData.observe(this@ModifyProductsFragment){
+                    confirmationWhenUploadOnChange()
+                }
+                confirmationCHANGELiveData.observe(this@ModifyProductsFragment){
+                    confirmationToAskToChange(builder)
+                }
+                confirmationSEELiveData.observe(this@ModifyProductsFragment){
+                    confirmationWhenSee()
+                }
+                confirmationDELETELiveData.observe(this@ModifyProductsFragment){
+                    confirmationToAskToDelete(builder)
+                }
             }
         }
-
-        return binding.root
     }
 
     private fun FragmentModifyProductsBinding.confirmationWhenAdd(builder: AlertDialog.Builder?) {
-        fun FragmentModifyProductsBinding.confirmationOperationADD(
-            builder: AlertDialog.Builder?
-        ) {
-            val name = modifyProductsNameEditText.text.toString()
-            val code = modifyProductsCodeEditText.text.toString()
-            val price = modifyProductsPriceEditText.text.toString()
-            val amount = modifyProductsAmountEditText.text.toString()
-            val category = modifyProductsCategorySpinner.selectedItem.toString()
+        val name = modifyProductsNameEditText.text.toString()
+        val code = modifyProductsCodeEditText.text.toString()
+        val price = modifyProductsPriceEditText.text.toString()
+        val amount = modifyProductsAmountEditText.text.toString()
+        val category = modifyProductsCategorySpinner.selectedItem.toString()
 
-            val message = getString(
-                R.string.modifyProducts__ADD__confirmation,
-                code,
-                name,
-                amount.toInt(),
-                price.toFloat(),
-                category
-            )
-            builder?.setMessage(message)
-                ?.setTitle(R.string.modifyProducts__add__text)
-                ?.setPositiveButton(R.string.modifyProducts__positiveOption__dialog)
-                { _, _ -> }
-            val dialog: AlertDialog? = builder?.create()
-            dialog?.show()
-        }
-        with(modifyProductsViewModel){
-            confirmationLiveData.removeObservers(viewLifecycleOwner)
-            confirmationLiveData.observe(viewLifecycleOwner) {
-                confirmationOperationADD(builder)
-                val dialog: AlertDialog? = builder?.create()
-                dialog?.show()
-                clearAllFields()
-            }
-        }
+        val message = getString(
+            R.string.modifyProducts__ADD__confirmation,
+            code,
+            name,
+            amount,
+            price,
+            category
+        )
+        builder?.setMessage(message)
+            ?.setTitle(R.string.modifyProducts__add__text)
+            ?.setPositiveButton(R.string.modifyProducts__positiveOption__dialog) { _, _ -> }
+            ?.setNegativeButton(""){ _, _ -> }
+
+        builder?.create()?.show()
+        clearAllFields()
     }
     private fun FragmentModifyProductsBinding.buttonOperationWhenAdd() {
         modifyProductsOperateButton.setOnClickListener {
@@ -151,81 +155,150 @@ class ModifyProductsFragment : Fragment() {
 
     private fun FragmentModifyProductsBinding.confirmationWhenSee() {
         with(modifyProductsViewModel){
-            confirmationLiveData.removeObservers(viewLifecycleOwner)
-            confirmationLiveData.observe(viewLifecycleOwner){
-                disableMainFields()
-                val price = getAuxProduct().price
-                val amount = getAuxProduct().amount
-                val name = getAuxProduct().name
-                modifyProductsPriceEditText.setText(price.toString())
-                modifyProductsAmountEditText.setText(amount.toString())
-                modifyProductsNameEditText.setText(name)
-                visibilityWhenSeeAfterConfirmation()
-            }
+            disableMainFields()
+            val price = getAuxProduct().price
+            val amount = getAuxProduct().amount
+            val name = getAuxProduct().name
+            modifyProductsPriceEditText.setText(price.toString())
+            modifyProductsAmountEditText.setText(amount.toString())
+            modifyProductsNameEditText.setText(name)
+            visibilityWhenSeeAfterConfirmation()
         }
     }
     private fun FragmentModifyProductsBinding.buttonOperationWhenSee() {
         with(modifyProductsViewModel){
             modifyProductsUploadButton.setOnClickListener {
-                    val code = modifyProductsCodeEditText.text.toString()
-                    val category = modifyProductsCategorySpinner.selectedItem.toString()
-                    seeOperation(code, category)
+                val code = modifyProductsCodeEditText.text.toString()
+                val category = modifyProductsCategorySpinner.selectedItem.toString()
+                val categoryPosition = modifyProductsCategorySpinner.selectedItemPosition
+                seeOperation(code, category, categoryPosition)
             }
             modifyProductsNewQueryButton.setOnClickListener {
+                modifyProductsCodeEditText.setText("")
                 hideInformativeFields()
                 enableMainFields()
             }
-            }
         }
+    }
 
-    private fun FragmentModifyProductsBinding.confirmationToAskToChange(){
-
+    private fun FragmentModifyProductsBinding.confirmationToAskToChange(builder: AlertDialog.Builder?){
+        with(modifyProductsViewModel){
+            val currentCode = getAuxProduct().code
+            val currentName = getAuxProduct().name
+            val currentAmount = getAuxProduct().amount
+            val currentPrice = getAuxProduct().price
+            val currentCategory = getAuxProduct().categorySTR
+            val newCode = getProductToChange().code
+            val newName = getProductToChange().name
+            val newAmount = getProductToChange().amount
+            val newPrice = getProductToChange().price
+            val newCategory = getProductToChange().categorySTR
+            val message = getString(R.string.modifyProducts__CHANGE__confirmation,
+                currentCode,
+                currentName,
+                currentAmount,
+                currentPrice,
+                currentCategory,
+                newCode,
+                newName,
+                newAmount,
+                newPrice,
+                newCategory)
+            builder?.setMessage(message)
+                ?.setTitle(R.string.modifyProducts__change__text)
+                ?.setPositiveButton(R.string.modifyProducts__positiveOption__dialog){ _, _ ->
+                    confirmationWhenChange()
+                }
+                ?.setNegativeButton(R.string.modifyProducts__negativeOption__dialog){ _, _ -> }
+            builder?.create()?.show()
+        }
     }
     private fun FragmentModifyProductsBinding.confirmationWhenUploadOnChange(){
         with(modifyProductsViewModel){
-            confirmationUploadChangeLiveData.removeObservers(viewLifecycleOwner)
-            confirmationUploadChangeLiveData.observe(viewLifecycleOwner){
-                disableMainFields()
-                setSpinnerEntries(modifyProductsNewCategorySpinner)
-                val code = getAuxProduct().code
-                val category = getAuxProduct().category
-                val price = getAuxProduct().price
-                val amount = getAuxProduct().amount
-                val name = getAuxProduct().name
-                modifyProductsPriceEditText.setText(price.toString())
-                modifyProductsAmountEditText.setText(amount.toString())
-                modifyProductsNameEditText.setText(name)
-                visibilityWhenChangeAfterUpload()
-                modifyProductsOldCodeTextView.text = code
-                modifyProductsNewCategorySpinner.setSelection(category)
-                modifyProductsNewCodeEditText.setText(code)
-                modifyProductsNewNameEditText.setText(name)
-                modifyProductsNewPriceEditText.setText(price.toString())
-                modifyProductsNewAmountEditText.setText(amount.toString())
-            }
+            disableMainFields()
+            setSpinnerEntries(modifyProductsNewCategorySpinner)
+            val code = getAuxProduct().code
+            val category = getAuxProduct().category
+            val price = getAuxProduct().price
+            val amount = getAuxProduct().amount
+            val name = getAuxProduct().name
+            modifyProductsPriceEditText.setText(price)
+            modifyProductsAmountEditText.setText(amount)
+            modifyProductsNameEditText.setText(name)
+            visibilityWhenChangeAfterUpload()
+            modifyProductsOldCodeTextView.text = code
+            modifyProductsNewCategorySpinner.setSelection(category)
+            modifyProductsNewCodeEditText.setText(code)
+            modifyProductsNewNameEditText.setText(name)
+            modifyProductsNewPriceEditText.setText(price)
+            modifyProductsNewAmountEditText.setText(amount)
         }
     }
-    private fun FragmentModifyProductsBinding.confirmationWhenChange() {
+    private fun FragmentModifyProductsBinding.confirmationWhenChange(){
         with(modifyProductsViewModel){
-            confirmationLiveData.removeObservers(viewLifecycleOwner)
-            confirmationLiveData.observe(viewLifecycleOwner){
-            }
+            changeOperation()
+            modifyProductsCodeEditText.setText("")
+            hideInformativeAndChangeableFields()
+            enableMainFields()
         }
     }
     private fun FragmentModifyProductsBinding.buttonOperationWhenChange() {
         with(modifyProductsViewModel){
             modifyProductsOperateButton.setOnClickListener {
-
+                val newCode = modifyProductsNewCodeEditText.text.toString()
+                val newName = modifyProductsNewNameEditText.text.toString()
+                val newAmount = modifyProductsNewAmountEditText.text.toString()
+                val newPrice = modifyProductsNewPriceEditText.text.toString()
+                val newCategory = modifyProductsNewCategorySpinner.selectedItem.toString()
+                val newCategoryPosition = modifyProductsNewCategorySpinner.selectedItemPosition
+                checkFieldsForChange(newCode, newName, newAmount, newPrice, newCategory, newCategoryPosition)
             }
 
             modifyProductsUploadButton.setOnClickListener {
                 val code = modifyProductsCodeEditText.text.toString()
                 val category = modifyProductsCategorySpinner.selectedItem.toString()
-                uploadForChange(code, category)
+                val categoryPosition = modifyProductsCategorySpinner.selectedItemPosition
+                uploadForChange(code, category, categoryPosition)
             }
             modifyProductsNewQueryButton.setOnClickListener {
+                modifyProductsCodeEditText.setText("")
                 hideInformativeAndChangeableFields()
                 enableMainFields()
+            }
+        }
+    }
+
+    private fun FragmentModifyProductsBinding.confirmationToAskToDelete(builder: AlertDialog.Builder?){
+        with(modifyProductsViewModel){
+            val code = getAuxProduct().code
+            val name = getAuxProduct().name
+            val amount = getAuxProduct().amount
+            val price = getAuxProduct().price
+            val category = getAuxProduct().categorySTR
+            val message = getString(R.string.modifyProducts__DELETE__confirmation,
+                code, name,  amount, price, category)
+            builder?.setMessage(message)
+                ?.setTitle(R.string.modifyProducts__change__text)
+                ?.setPositiveButton(R.string.modifyProducts__positiveOption__dialog){ _, _ ->
+                    confirmationWhenDelete()
+                }
+                ?.setNegativeButton(R.string.modifyProducts__negativeOption__dialog){ _, _ -> }
+            builder?.create()?.show()
+        }
+    }
+    private fun FragmentModifyProductsBinding.confirmationWhenDelete(){
+        with(modifyProductsViewModel){
+            deleteOperation()
+            modifyProductsCodeEditText.setText("")
+        }
+    }
+    private fun FragmentModifyProductsBinding.buttonOperationWhenDelete() {
+        with(modifyProductsViewModel){
+            modifyProductsOperateButton.setOnClickListener {
+                val code = modifyProductsCodeEditText.text.toString()
+                val category = modifyProductsCategorySpinner.selectedItem.toString()
+                val categoryPosition = modifyProductsCategorySpinner.selectedItemPosition
+                checkFields(code, category, categoryPosition, 2)
             }
         }
     }
