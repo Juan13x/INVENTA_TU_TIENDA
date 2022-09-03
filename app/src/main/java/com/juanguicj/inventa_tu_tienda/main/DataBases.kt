@@ -1,5 +1,9 @@
 package com.juanguicj.inventa_tu_tienda.main
 
+import android.R
+import android.content.Context
+import android.widget.ArrayAdapter
+import android.widget.Spinner
 import kotlin.collections.iterator as iterator1
 
 data class ProductsType(val name: String, val amount: Int, val price: Float)
@@ -15,7 +19,7 @@ class PersistentClass{
     fun clearUser(){ this.user = "" }
     fun clearCategory(){ this.category = "" }
     fun getUser(): String{ return this.user }
-    fun getCategory(newCategory: String): String{ return this.category }
+    fun getCategory(): String{ return this.category }
     fun isSessionActive(): Boolean{ return this.user != "" }
 
     /*! Persistent dataBase. */
@@ -104,6 +108,23 @@ class PersistentClass{
     }
 
     /**
+     * Rename category
+     * @return 1 if the category was renamed. 2 if the original and new name are the same.
+     * 0 if the new name is already assigned
+     */
+    fun renameCategory(currentCategoryName: String, newCategoryName: String):Int {
+        return if(currentCategoryName == newCategoryName){
+            2
+        } else if(containsCategory(newCategoryName)){
+            0
+        } else{
+            addCategory(newCategoryName)
+            dictionary[newCategoryName] = dictionary[currentCategoryName]!!
+            deleteCategory(currentCategoryName)
+            1 }
+    }
+
+    /**
      * Returns the Categories
      */
     fun getCategories(): MutableSet<String>{
@@ -147,7 +168,7 @@ class PersistentClass{
         if(check == 1){
             return this.dictionary[category]?.get(getCode)
         }
-        return ProductsType("", check, 0.0f)
+        return null
     }
 
     /**
@@ -209,57 +230,57 @@ class DataBaseClass{
 
             this.setProduct(
                 user,
-                "Aseo",
+                "Aseo1",
                 "110",
                 ProductsType("Fabuloso 400ml", 12, 1400.0f)
             )
             this.setProduct(
                 user,
-                "Aseo",
+                "Aseo1",
                 "120",
                 ProductsType("Limpido 400ml", 10, 1300.0f)
             )
             this.setProduct(
                 user,
-                "Aseo",
+                "Aseo1",
                 "130",
                 ProductsType("Fabuloso 250ml", 20, 1000.0f)
             )
 
             this.setProduct(
                 user,
-                "Comida",
+                "Comida2",
                 "210",
                 ProductsType("Arroz libra", 25, 2000.0f)
             )
             this.setProduct(
                 user,
-                "Comida",
+                "Comida2",
                 "220",
                 ProductsType("Leche Colanta", 8, 3600.0f)
             )
             this.setProduct(
                 user,
-                "Comida",
+                "Comida2",
                 "230",
                 ProductsType("Lecherita tubito", 26, 800.0f)
             )
 
             this.setProduct(
                 user,
-                "Revuelto",
+                "Revuelto3",
                 "310",
                 ProductsType("Tomate", 2, 2200.0f)
             )
             this.setProduct(
                 user,
-                "Revuelto",
+                "Revuelto3",
                 "320",
                 ProductsType("Papa", 10, 1700.0f)
             )
             this.setProduct(
                 user,
-                "Revuelto",
+                "Revuelto3",
                 "330",
                 ProductsType("Limon", 3, 2500.0f)
             )
@@ -358,30 +379,6 @@ class DataBaseClass{
     }
 
     /**
-     * Changes the category, but reassigns the value of the recent one
-     * @return 1 for true, 3 not changed, same name, 0 for not included category,2 for not existing
-     * user
-     */
-    fun changeCategory(user: String, currentCategoryName: String, newCategoryName: String):Int{
-        if(currentCategoryName == newCategoryName){
-            return 3
-        }
-        val check = containsCategory(user, currentCategoryName)
-        if (check == 1){
-            fun addAllProducts(user:String, newCategoryName: String, products: MutableMap<String, ProductsType>?){
-                for(par in products?.asIterable()!!){
-                    setProduct(user, newCategoryName, par.key, par.value)
-                }
-            }
-            val currentCategory = getAllProducts(user, currentCategoryName)
-            deleteCategory(user, currentCategoryName)
-            addCategory(user, newCategoryName)
-            addAllProducts(user, newCategoryName, currentCategory)
-        }
-        return check
-    }
-
-    /**
      * Delete a category.
      * @return 1 for true, 0 not included category, 2 for not existing user
      */
@@ -402,6 +399,28 @@ class DataBaseClass{
             categories?.remove("")
             categories
         } else null
+    }
+
+    /**
+     * Rename category
+     * @return 1 if the category was renamed. 2 if the original and new name are the same.
+     * 0 if the new name is already assigned. 3 if the user does not exist
+     */
+    fun renameCategory(user: String, currentCategoryName: String, newCategoryName: String):Int{
+        return if(containsUser(user)){
+            if(currentCategoryName == newCategoryName){
+                2
+            } else if(containsCategory(user, newCategoryName) == 1){
+                0
+            }else{
+                addCategory(user, newCategoryName)
+                users[user]?.products?.set(newCategoryName, users[user]?.products?.get(currentCategoryName)!!)
+                deleteCategory(user, currentCategoryName)
+                1
+            }
+        }else{
+            3
+        }
     }
 
     /**
@@ -478,12 +497,23 @@ class DataBaseClass{
             products?.remove("")
             return products
         }
-        return mutableMapOf("null" to ProductsType("", check, 0.0f))
+        return null
     }
 }
 
 val myDictionary = PersistentClass()
 val myDataBase = DataBaseClass()
+
+fun setSpinnerEntries(spinner: Spinner, context: Context, viewModel: MainViewModel) {
+    val changedSpinnerList: ArrayList<String> = viewModel.getUpdatedCategories()
+    val adapter: ArrayAdapter<String> = ArrayAdapter(
+        context,
+        R.layout.simple_spinner_item,
+        changedSpinnerList
+    )
+    adapter.setDropDownViewResource(R.layout.simple_spinner_dropdown_item)
+    spinner.adapter = adapter
+}
 
 /*
 TEST

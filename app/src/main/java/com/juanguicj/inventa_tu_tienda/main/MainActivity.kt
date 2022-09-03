@@ -28,9 +28,12 @@ class MainActivity : AppCompatActivity() {
         with(binding){
             mainViewModel.logInMainLiveData.observe(this@MainActivity){
                     logIn->
-                if(logIn){
+                if (logIn) {
                     tabs.setScrollPosition(1,0f, true)
                     viewPager.currentItem = 1
+                    mainViewModel.linkFunctionGetUpdatedCategoriesToDataBase()
+                } else {
+                    mainViewModel.linkFunctionGetUpdatedCategoriesToDictionary()
                 }
             }
         }

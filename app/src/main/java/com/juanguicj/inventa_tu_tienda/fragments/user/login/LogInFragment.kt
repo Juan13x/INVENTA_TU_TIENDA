@@ -39,8 +39,8 @@ class LogInFragment : Fragment() {
                 mainViewModel.setLogin(
                     logInUserEditText.text.toString()
                 )
-                logInUserEditText.setText("4")
-                loginPasswordTextInputEditText.setText("5")
+                logInUserEditText.setText("")
+                loginPasswordTextInputEditText.setText("")
                 warningTextView.text = ""
             }
 

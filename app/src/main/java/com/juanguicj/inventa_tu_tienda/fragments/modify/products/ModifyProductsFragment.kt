@@ -5,8 +5,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
-import android.widget.Spinner
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -15,7 +13,7 @@ import com.juanguicj.inventa_tu_tienda.R
 import com.juanguicj.inventa_tu_tienda.databinding.FragmentModifyProductsBinding
 import com.juanguicj.inventa_tu_tienda.main.MainViewModel
 import com.juanguicj.inventa_tu_tienda.main.myDictionary
-import android.R as R1
+import com.juanguicj.inventa_tu_tienda.main.setSpinnerEntries
 
 
 class ModifyProductsFragment : Fragment() {
@@ -33,6 +31,7 @@ class ModifyProductsFragment : Fragment() {
         super.onCreate(savedInstanceState)
         binding = FragmentModifyProductsBinding.inflate(layoutInflater)
         modifyProductsViewModel = ViewModelProvider(this)[ModifyProductsViewModel::class.java]
+        val myContext = this.requireContext()
         val builder: AlertDialog.Builder? = activity?.let {
             AlertDialog.Builder(it)
         }
@@ -41,17 +40,21 @@ class ModifyProductsFragment : Fragment() {
             notVisibleWhenNotChange()
             modifyProductsQueryLinearLayout.visibility  = View.GONE
 
+            modifyProductsOperateButton.setOnClickListener {
+                defaultOperationForOperateButtonIsADD()
+            }
+
             with(modifyProductsViewModel) {
                 if (myDictionary.isSessionActive()) {
-                    modifyProductsViewModel.linkFunctionGetUpdatedCategoriesToDataBase()
+                    mainViewModel.linkFunctionGetUpdatedCategoriesToDataBase()
                 }
-                setSpinnerEntries(modifyProductsCategorySpinner)
+                setSpinnerEntries(modifyProductsCategorySpinner, myContext, mainViewModel)
 
                 errorLiveData.observe(this@ModifyProductsFragment) { error ->
                     val toast = Toast.makeText(
                         requireContext().applicationContext,
                         error,
-                        Toast.LENGTH_LONG
+                        Toast.LENGTH_SHORT
                     )
                     toast.show()
                 }
@@ -88,15 +91,10 @@ class ModifyProductsFragment : Fragment() {
                 }
 
                 mainViewModel.categoryChangeLiveData.observe(this@ModifyProductsFragment) {
-                    setSpinnerEntries(modifyProductsCategorySpinner)
+                    setSpinnerEntries(modifyProductsCategorySpinner, myContext, mainViewModel)
                 }
                 mainViewModel.logInMainLiveData.observe(this@ModifyProductsFragment) { logIn ->
-                    if (logIn) {
-                        modifyProductsViewModel.linkFunctionGetUpdatedCategoriesToDataBase()
-                    } else {
-                        modifyProductsViewModel.linkFunctionGetUpdatedCategoriesToDictionary()
-                    }
-                    setSpinnerEntries(modifyProductsCategorySpinner)
+                    setSpinnerEntries(modifyProductsCategorySpinner, myContext, mainViewModel)
                 }
 
                 confirmationADDLiveData.observe(this@ModifyProductsFragment){
@@ -141,15 +139,18 @@ class ModifyProductsFragment : Fragment() {
         builder?.create()?.show()
         clearAllFields()
     }
+    private fun FragmentModifyProductsBinding.defaultOperationForOperateButtonIsADD() {
+        val code = modifyProductsCodeEditText.text.toString()
+        val category = modifyProductsCategorySpinner.selectedItem.toString()
+        val name = modifyProductsNameEditText.text.toString()
+        val price = modifyProductsPriceEditText.text.toString()
+        val amount = modifyProductsAmountEditText.text.toString()
+
+        modifyProductsViewModel.addOperation(code, name, amount, price, category)
+    }
     private fun FragmentModifyProductsBinding.buttonOperationWhenAdd() {
         modifyProductsOperateButton.setOnClickListener {
-            val code = modifyProductsCodeEditText.text.toString()
-            val category = modifyProductsCategorySpinner.selectedItem.toString()
-            val name = modifyProductsNameEditText.text.toString()
-            val price = modifyProductsPriceEditText.text.toString()
-            val amount = modifyProductsAmountEditText.text.toString()
-
-            modifyProductsViewModel.addOperation(code, name, amount, price, category)
+            defaultOperationForOperateButtonIsADD()
         }
     }
 
@@ -216,7 +217,7 @@ class ModifyProductsFragment : Fragment() {
     private fun FragmentModifyProductsBinding.confirmationWhenUploadOnChange(){
         with(modifyProductsViewModel){
             disableMainFields()
-            setSpinnerEntries(modifyProductsNewCategorySpinner)
+            modifyProductsNewCategorySpinner.adapter = modifyProductsCategorySpinner.adapter
             val code = getAuxProduct().code
             val category = getAuxProduct().category
             val price = getAuxProduct().price
@@ -408,16 +409,5 @@ class ModifyProductsFragment : Fragment() {
         modifyProductsNameEditText.setText("")
         modifyProductsPriceEditText.setText("")
         modifyProductsAmountEditText.setText("")
-    }
-
-    private fun setSpinnerEntries(spinner: Spinner) {
-        val changedSpinnerList: ArrayList<String> = modifyProductsViewModel.getUpdatedCategories()
-        val adapter: ArrayAdapter<String> = ArrayAdapter(
-            this@ModifyProductsFragment.requireContext(),
-            R1.layout.simple_spinner_item,
-            changedSpinnerList
-        )
-        adapter.setDropDownViewResource(R1.layout.simple_spinner_dropdown_item)
-        spinner.adapter = adapter
     }
 }

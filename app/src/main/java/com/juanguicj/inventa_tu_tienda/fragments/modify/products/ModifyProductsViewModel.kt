@@ -205,29 +205,4 @@ class ModifyProductsViewModel : ViewModel() {
             myDictionary.deleteProduct(auxProduct.categorySTR, auxProduct.code)
         }
     }
-    //--------------------------------------
-    //Spinner
-    //--------------------------------------
-    private fun getUpdatedCategoriesDictionary(): ArrayList<String>{
-        val categories = myDictionary.getCategories()
-        val categoryList: ArrayList<String> = ArrayList()
-        categoryList.addAll(categories)
-        return categoryList
-    }
-    private fun getUpdatedCategoriesDataBase():ArrayList<String>{
-        val categories = myDataBase.getCategories(myDictionary.getUser())
-        val categoryList: ArrayList<String> = ArrayList()
-        categoryList.addAll(categories!!)
-        return categoryList
-    }
-
-    var getUpdatedCategories = ::getUpdatedCategoriesDictionary
-
-    fun linkFunctionGetUpdatedCategoriesToDictionary(){
-        getUpdatedCategories = ::getUpdatedCategoriesDictionary
-    }
-
-    fun linkFunctionGetUpdatedCategoriesToDataBase(){
-        getUpdatedCategories = ::getUpdatedCategoriesDataBase
-    }
 }

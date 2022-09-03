@@ -1,5 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!---->
+    <string name="modifyCategories__emptyRename__error">The field \"New Category Name\" is empty</string>
+    <string name="modifyCategories__emptyCategory__error">The field \"Select a Category\" is empty. Add a new Category to proceed</string>
+    <string name="modifyCategories__NewCategoryIncluded__error">The category already exists. Add a different One</string>
+    <string name="modifyCategories__RenameCategoryIncluded__error">This name is already used for another category. Use other.</string>
+    <string name="modifyCategories__RenameToSameCategory__error">The name is the same as the original. Use other.</string>
+    <string name="modifyCategories__ADD__confirmation">The Category was successfully added</string>
+    <string name="modifyCategories__RENAME__confirmation">The Name of the Category was successfully changed</string>
+    <string name="modifyCategories__ERASE__confirmation">The Category was successfully erased</string>
+    <string name="modifyCategories__ERASE__alert">Are you SURE to delete the following category?: %1$s</string>
+    <string name="modifyCategories__positiveOption__dialog">OK</string>
+    <string name="modifyCategories__negativeOption__dialog">cancel</string>
     <!--UI-->
     <!--TEXT-->
     <string name="modifyCategories__add__text">Add</string>
@@ -10,4 +22,5 @@
     <string name="modifyCategories__operate__defaultText">Add</string>
     <!--HINT-->
     <string name="modifyCategories__newCategory__hint">Enter the name</string>
+    <string name="modifyCategories__filter">QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklñzxcvbnm1234567890_áéíóúÁÉÍÓÚ</string>
 </resources>

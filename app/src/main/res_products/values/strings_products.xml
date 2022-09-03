@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="products__text__categoryInfo">Select a Category</string>
+    <string name="products__error__category">You don\'t have Categories. Add One</string>
+    <string name="products__text__productInfo">Products from Category: %1$s</string>
+    <string name="products__error__products">You don\'t have Products for this category. Add some</string>
+    <string name="products__error__categoryErrorType">System Error!</string>
+    <string name="products__text__codeInfo">CODE</string>
+    <string name="products__text__nameInfo">NAME</string>
+    <string name="products__text__priceInfo">PRICE</string>
+    <string name="products__text__amountInfo">AMOUNT</string>
+</resources>
