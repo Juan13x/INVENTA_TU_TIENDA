@@ -1,10 +1,22 @@
 package com.juanguicj.inventa_tu_tienda.main
 
 import android.R
+import android.app.AlertDialog
 import android.content.Context
+import android.util.Log
 import android.widget.ArrayAdapter
 import android.widget.Spinner
-import kotlin.collections.iterator as iterator1
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
+import kotlin.collections.ArrayList
+
+val auth: FirebaseAuth = Firebase.auth
+val categories: ArrayList<String> = ArrayList()
+
+private const val CLOUD_Categories = false
+private const val CLOUD_Products = false
 
 data class ProductsType(val name: String, val amount: Int, val price: Float)
 
@@ -32,6 +44,9 @@ class PersistentClass{
      * it is created
      */
     fun create():Boolean{
+        if(auth.currentUser != null) {
+            auth.signOut()
+        }
         this.addCategory("Aseo")
         this.addCategory("Comida")
         this.addCategory("Revuelto")
@@ -200,6 +215,7 @@ class PersistentClass{
     }
 }
 
+
 class DataBaseClass{
     private class DataBase{
         /*! ProductsType dataBase. */
@@ -217,80 +233,155 @@ class DataBaseClass{
      * it is created
      */
     fun create():Boolean {
-        this.addUser("Juan")
-        this.setPassword("Juan", "111")
-        this.addUser("Luis")
-        this.setPassword("Luis", "222")
-        this.addUser("Karen")
-        this.setPassword("Karen", "333")
-        for (user in this.users.keys) {
+        val db = Firebase.firestore
+
+        this.addUser("juan1@app.com")
+        this.setPassword("juan1@app.com", "111111")
+
+        this.addUser("luis2@app.com")
+        this.setPassword("luis2@app.com", "222222")
+
+        this.addUser("karen3@app.com")
+        this.setPassword("karen3@app.com", "3333333")
+
+        var list = this.users.keys.toList()
+        val lastIndex = list.lastIndex
+        list = list.subList(1,lastIndex+1)
+        var counter = 0
+        for (user in list) {
+            val counterSTR = counter.toString()
+
             this.addCategory(user, "Aseo1")
             this.addCategory(user, "Comida2")
             this.addCategory(user, "Revuelto3")
 
+            if(CLOUD_Categories) {
+                val arrayCategory = hashMapOf("0" to arrayListOf("Aseo1", "Comida2", "Revuelto3"))
+                db.collection("categories")
+                    .document(user)
+                    .set(arrayCategory)
+            }
             this.setProduct(
                 user,
                 "Aseo1",
-                "110",
+                "11$counterSTR",
                 ProductsType("Fabuloso 400ml", 12, 1400.0f)
             )
+
             this.setProduct(
                 user,
                 "Aseo1",
-                "120",
+                "12$counterSTR",
                 ProductsType("Limpido 400ml", 10, 1300.0f)
             )
             this.setProduct(
                 user,
                 "Aseo1",
-                "130",
+                "13$counterSTR",
                 ProductsType("Fabuloso 250ml", 20, 1000.0f)
             )
 
             this.setProduct(
                 user,
                 "Comida2",
-                "210",
+                "21$counterSTR",
                 ProductsType("Arroz libra", 25, 2000.0f)
             )
             this.setProduct(
                 user,
                 "Comida2",
-                "220",
+                "22$counterSTR",
                 ProductsType("Leche Colanta", 8, 3600.0f)
             )
             this.setProduct(
                 user,
                 "Comida2",
-                "230",
+                "23$counterSTR",
                 ProductsType("Lecherita tubito", 26, 800.0f)
             )
 
             this.setProduct(
                 user,
                 "Revuelto3",
-                "310",
+                "31$counterSTR",
                 ProductsType("Tomate", 2, 2200.0f)
             )
             this.setProduct(
                 user,
                 "Revuelto3",
-                "320",
+                "32$counterSTR",
                 ProductsType("Papa", 10, 1700.0f)
             )
             this.setProduct(
                 user,
                 "Revuelto3",
-                "330",
+                "33$counterSTR",
                 ProductsType("Limon", 3, 2500.0f)
             )
+
+            counter += 1
         }
 
+        if(CLOUD_Products){
+            counter = 0
+            db.runTransaction{ transaction->
+                for(user in list){
+                    val counterSTR = counter.toString()
+
+                    val user = db.collection("products").document(user)
+                    val catAseo = user.collection("Aseo1")
+                    val catComida = user.collection("Comida2")
+                    val catRevuelto = user.collection("Revuelto3")
+
+                    var arrayProduct = hashMapOf("name" to "Fabuloso 250ml", "amount" to 20, "price" to 1000.0f)
+                    var code = catAseo.document("13$counterSTR")
+                    transaction.set(code, arrayProduct)
+
+                    arrayProduct = hashMapOf("name" to "Limpido 400ml", "amount" to 10, "price" to 1300.0f)
+                    code = catAseo.document("12$counterSTR")
+                    transaction.set(code, arrayProduct)
+
+                    arrayProduct = hashMapOf("name" to "Fabuloso 400ml", "amount" to 12, "price" to 1400.0f)
+                    code = catAseo.document("11$counterSTR")
+                    transaction.set(code, arrayProduct)
+
+                    arrayProduct = hashMapOf("name" to "Arroz Libra", "amount" to 25, "price" to 2000.0f)
+                    code = catComida.document("21$counterSTR")
+                    transaction.set(code, arrayProduct)
+
+                    arrayProduct = hashMapOf("name" to "Leche Colanta", "amount" to 8, "price" to 3600.0f)
+                    code = catComida.document("22$counterSTR")
+                    transaction.set(code, arrayProduct)
+
+                    arrayProduct = hashMapOf("name" to "Lecherita Tubito", "amount" to 26, "price" to 800.0f)
+                    code = catComida.document("23$counterSTR")
+                    transaction.set(code, arrayProduct)
+
+                    arrayProduct = hashMapOf("name" to "Tomate", "amount" to 2, "price" to 2200.0f)
+                    code = catRevuelto.document("31$counterSTR")
+                    transaction.set(code, arrayProduct)
+
+                    arrayProduct = hashMapOf("name" to "Papa", "amount" to 10, "price" to 1700.0f)
+                    code = catRevuelto.document("32$counterSTR")
+                    transaction.set(code, arrayProduct)
+
+                    arrayProduct = hashMapOf("name" to "Limon", "amount" to 3, "price" to 2500.0f)
+                    code = catRevuelto.document("33$counterSTR")
+                    transaction.set(code, arrayProduct)
+
+                    counter += 1
+                }
+            }.addOnCompleteListener{
+                Log.i("Creation transaction", "Success")
+            }.addOnCanceledListener {
+                Log.e("Creation transaction", "Error")
+            }
+        }
         return false
     }
 
     /**
-     * Check if the user exists
+     * Check if the user exists.
      */
     fun containsUser(user: String): Boolean{
         return this.users.contains(user)
@@ -504,8 +595,18 @@ class DataBaseClass{
 val myDictionary = PersistentClass()
 val myDataBase = DataBaseClass()
 
+//--------------------------------------
+//Dialog
+//--------------------------------------
+fun showDialog_DataBaseError(context: Context, builder: AlertDialog.Builder?){
+    builder?.setMessage(com.juanguicj.inventa_tu_tienda.R.string.database_unknownAndUnIdentifiedError)
+        ?.setPositiveButton("Ok"){_,_->}
+    builder?.create()?.show()
+}
+
+//SPINNER
 fun setSpinnerEntries(spinner: Spinner, context: Context, viewModel: MainViewModel) {
-    val changedSpinnerList: ArrayList<String> = viewModel.getUpdatedCategories()
+    val changedSpinnerList = categories
     val adapter: ArrayAdapter<String> = ArrayAdapter(
         context,
         R.layout.simple_spinner_item,
@@ -514,186 +615,3 @@ fun setSpinnerEntries(spinner: Spinner, context: Context, viewModel: MainViewMod
     adapter.setDropDownViewResource(R.layout.simple_spinner_dropdown_item)
     spinner.adapter = adapter
 }
-
-/*
-TEST
-
-fun main1(){
-   val myDictionary = PersistentClass()
-    myDictionary.create()
-
-    var check1 = myDictionary.addCategory("test1")
-    println("creation test1 $check1")
-    check1 = myDictionary.addCategory("test1")
-    println("creation test1 $check1")
-
-    var check2 = myDictionary.setProduct("test1","code1", ProductsType("name1", 5, 1000.0f))
-    println("\ncreation code1 test1 $check2")
-    var product = myDictionary.getProduct("test1", "code1")
-    check2 = myDictionary.setProduct("test1","code1", ProductsType("name1", 5, 2000.0f))
-    println("creation code1 test1 $check2")
-    check2 = myDictionary.setProduct("test2","code2", ProductsType("name1", 5, 1000.0f))
-    println("creation code2 test2 $check2")
-    check2 = myDictionary.setProduct("test1","code3", ProductsType("name1", 15, 3000.0f))
-    println("creation code3 test1 $check2")
-
-    println("get code1 test1 $product")
-    product = myDictionary.getProduct("test1", "code1")
-    println("get code1 test1 $product")
-    product = myDictionary.getProduct("test1", "code3")
-    println("get code3 test1 $product")
-    product = myDictionary.getProduct("test2", "code1")
-    println("get code1 test2 $product")
-    var check3 = myDictionary.containsProduct("test2", "code1")
-    println("contain code1 test2 $check3")
-    product = myDictionary.getProduct("test1", "code2")
-    println("get code2 test1 $product")
-
-    check1 = myDictionary.addCategory("test2")
-    println("creation test2 $check1")
-    check3 = myDictionary.containsProduct("test2", "code1")
-    println("contain code1 test2 $check3")
-    product = myDictionary.getProduct("test2", "code1")
-    println("get code1 test2 $product")
-    check2 = myDictionary.setProduct("test2","code2", ProductsType("name2", 20, 1050.0f))
-    println("creation code2 test2 $check2")
-    product = myDictionary.getProduct("test2", "code1")
-    println("get code1 test2 $product")
-    check2 = myDictionary.setProduct("test2","code1", ProductsType("name2", 19, 1050.0f))
-    println("creation code1 test2 $check2")
-    check3 = myDictionary.containsProduct("test2", "code1")
-    println("contain code1 test2 $check3")
-    product = myDictionary.getProduct("test2", "code1")
-    println("get code1 test2 $product")
-
-    check3 = myDictionary.deleteProduct("test1", "code4")
-    println("\ndelete code4 test1 $check3")
-    check3 = myDictionary.deleteProduct("test1", "code1")
-    println("delete code1 test1 $check3")
-    product = myDictionary.getProduct("test1", "code1")
-    println("get code1 test1 $product")
-
-    product = myDictionary.getProduct("Aseo", "105")
-    println("\nget Aseo 105 $product")
-    check1 = myDictionary.deleteCategory("Aseo")
-    println("delete Aseo $check1")
-    check3 = myDictionary.containsProduct("Aseo", "105")
-    println("contain 105 Aseo $check3")
-    product = myDictionary.getProduct("Aseo", "105")
-    println("get Aseo 105 $product")
-
-    product = myDictionary.getProduct("Comida", "250")
-    println("\nget Comida 250 $product")
-    check3 = myDictionary.deleteProduct("Comida", "250")
-    println("delete 250 Aseo $check3")
-    check3 = myDictionary.containsProduct("Comida", "250")
-    println("contain 250 Comida $check3")
-
-    var allP = myDictionary.getAllProducts("Comida")
-    println("\nAll products Comida $allP")
-    var allC = myDictionary.getCategories()
-    println("All categories $allC")
-}
-
-fun main2(){
-    val myDataBase = DataBaseClass()
-    myDataBase.create()
-
-    var check1 = myDataBase.addCategory("Juan","test1")
-    println("creation test1 Juan $check1")
-    check1 = myDataBase.addCategory("Juan","test1")
-    println("creation test1 Juan $check1")
-
-    var check2 = myDataBase.setProduct("Juan","test1","code1", ProductsType("name1", 5, 1000.0f))
-    println("\ncreation code1 Juan $check2")
-    var product = myDataBase.getProduct("Juan","test1", "code1")
-    check2 = myDataBase.setProduct("Juan","test1","code1", ProductsType("name1", 5, 2000.0f))
-    println("creation code1 Juan $check2")
-    check2 = myDataBase.setProduct("Juan","test2","code2", ProductsType("name1", 5, 1000.0f))
-    println("creation code2 test2 Juan $check2")
-    check2 = myDataBase.setProduct("Juan","test1","code3", ProductsType("name1", 15, 3000.0f))
-    println("creation code3 Juan $check2")
-
-    println("get code1 Juan $product")
-    product = myDataBase.getProduct("Juan","test1", "code1")
-    println("get code1 Juan $product")
-    product = myDataBase.getProduct("Juan","test1", "code3")
-    println("get code3 Juan $product")
-    product = myDataBase.getProduct("Juan","test2", "code1")
-    println("get code1 test2 Juan $product")
-    var check3 = myDataBase.containsProduct("Juan","test2", "code1")
-    println("contain code1 test2 Juan $check3")
-    product = myDataBase.getProduct("Juan","test1", "code2")
-    println("get code2 test1 Juan $product")
-
-    check1 = myDataBase.addCategory("Juan","test2")
-    println("creation test2 Juan $check1")
-    check3 = myDataBase.containsProduct("Juan","test2", "code1")
-    println("contain code1 test2 Juan $check3")
-    product = myDataBase.getProduct("Juan","test2", "code1")
-    println("get code1 test2 Juan $product")
-    check2 = myDataBase.setProduct("Juan","test2","code2", ProductsType("name2", 20, 1050.0f))
-    println("creation code2 test2 Juan $check2")
-    product = myDataBase.getProduct("Juan","test2", "code1")
-    println("get code1 test2 Juan $product")
-    check2 = myDataBase.setProduct("Juan","test2","code1", ProductsType("name2", 19, 1050.0f))
-    println("creation code1 test2 Juan $check2")
-    check3 = myDataBase.containsProduct("Juan","test2", "code1")
-    println("contain code1 test2 Juan $check3")
-    product = myDataBase.getProduct("Juan","test2", "code1")
-    println("get code1 test2 Juan $product")
-
-    check1 = myDataBase.deleteProduct("Juan","test1", "code4")
-    println("\ndelete code4 test1 Juan $check1")
-    check1 = myDataBase.deleteProduct("Juan","test1", "code1")
-    println("delete code1 test1 Juan $check1")
-    product = myDataBase.getProduct("Juan","test1", "code1")
-    println("get code1 Juan $product")
-
-    product = myDataBase.getProduct("Juan","Aseo", "105")
-    println("\nget Aseo 105 Juan $product")
-    check1 = myDataBase.deleteCategory("Juan","Aseo")
-    println("delete Aseo Juan $check1")
-    check3 = myDataBase.containsProduct("Juan","Aseo", "105")
-    println("contain 105 Aseo Juan $check3")
-    product = myDataBase.getProduct("Juan","Aseo", "105")
-    println("get Aseo 105 Juan $product")
-
-    product = myDataBase.getProduct("Juan","Comida", "250")
-    println("\nget Comida 250 Juan $product")
-    check1 = myDataBase.deleteProduct("Juan","Comida", "250")
-    println("delete 250 Comida Juan $check1")
-    check3 = myDataBase.containsProduct("Juan","Comida", "250")
-    println("contain 250 Comida Juan $check3")
-
-    var check4 = myDataBase.addUser("Mateo")
-    println("\ncreation Mateo $check4")
-    check2 = myDataBase.setProduct("Mateo","test2","code2", ProductsType("name2", 20, 1050.0f))
-    println("creation code2 test2 Mateo $check2")
-    check1 = myDataBase.addCategory("Mateo","test2")
-    println("creation test2 Mateo $check1")
-    product = myDataBase.getProduct("Mateo","test2", "code1")
-    println("get code1 test2 Mateo $product")
-    check2 = myDataBase.setProduct("Mateo","test2","code1", ProductsType("name2", 19, 1050.0f))
-    println("creation code1 test2 Mateo $check2")
-    check3 = myDataBase.containsProduct("Mateo","test2", "code1")
-    println("contain code1 test2 Mateo $check3")
-    product = myDataBase.getProduct("Mateo","test2", "code1")
-    println("get code1 test2 Mateo $product")
-
-    check4 = myDataBase.deleteUser("Juan")
-    println("\nDelete Juan $check4")
-    product = myDataBase.getProduct("Juan","Comida", "250")
-    println("get Comida 250 Juan $product")
-    check1 = myDataBase.deleteProduct("Juan","Comida", "250")
-    println("delete 250 Comida Juan $check1")
-    check3 = myDataBase.containsProduct("Juan","Comida", "250")
-    println("contain 250 Comida Juan $check3")
-}
-
-fun main(){
-    main1()
-    println("\n\n#############################")
-    main2()
-}
-*/

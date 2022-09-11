@@ -1,12 +1,21 @@
 package com.juanguicj.inventa_tu_tienda.fragments.products
 
+import android.R
+import android.app.AlertDialog
+import android.content.Context
+import android.widget.ArrayAdapter
+import android.widget.ListView
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.google.firebase.firestore.DocumentSnapshot
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import com.juanguicj.inventa_tu_tienda.fragments.modify.products.*
 import com.juanguicj.inventa_tu_tienda.main.ProductsType
 import com.juanguicj.inventa_tu_tienda.main.myDataBase
 import com.juanguicj.inventa_tu_tienda.main.myDictionary
+import com.juanguicj.inventa_tu_tienda.main.showDialog_DataBaseError
 
 class ProductsViewModel : ViewModel() {
     private val errorCategoryMutableLiveData: MutableLiveData<Boolean> = MutableLiveData()
@@ -19,7 +28,7 @@ class ProductsViewModel : ViewModel() {
     val afterSelectionConfirmationLiveData: LiveData<Boolean> = afterSelectionConfirmationMutableLiveData
 
 
-    fun getCategoryList(): MutableList<String>?{
+    fun getCategoryList(listView: ListView, context: Context){
         val categories = if(myDictionary.isSessionActive()){
             myDataBase.getCategories(myDictionary.getUser())?.toMutableList()
         }else{
@@ -27,9 +36,11 @@ class ProductsViewModel : ViewModel() {
         }
         if(categories.isNullOrEmpty()){
             errorCategoryMutableLiveData.value = true
-            return null
+            listView.adapter = null
+        } else{
+            val adapter = ArrayAdapter(context, R.layout.simple_list_item_1, categories)
+            listView.adapter = adapter
         }
-        return categories
     }
 
     fun checkCategoryField(category: Any){
@@ -41,26 +52,56 @@ class ProductsViewModel : ViewModel() {
         }
     }
 
-    fun getProductList(productAdapter: ProductAdapter){
-        val products: MutableMap<String, ProductsType>? = if(myDictionary.isSessionActive()){
-            myDataBase.getAllProducts(myDictionary.getUser(), myDictionary.getCategory())
-        }else{
-            myDictionary.getAllProducts(myDictionary.getCategory())
-        }
-        if (products != null) {
-            val array = arrayListOf<ArrayList<String?>>()
-            val arrayToAdd = arrayListOf<String?>()
-            arrayToAdd.addAll(arrayOf("","","",""))
-            for(i_product in products.asIterable()){
-                arrayToAdd[codePosition] = i_product.key
-                arrayToAdd[namePosition] = i_product.value.name
-                arrayToAdd[pricePosition] = i_product.value.price.toString()
-                arrayToAdd[amountPosition] = i_product.value.amount.toString()
-                array.add(arrayToAdd)
+    fun getProductList(productAdapter: ProductAdapter, context: Context, builder: AlertDialog.Builder?){
+        fun assignProductsFromDocumentSnapshot(products: MutableList<DocumentSnapshot>){
+            if (products.isNotEmpty()) {
+                var array = arrayOf<Array<String?>>()
+                for(i_product in products.asIterable()){
+                    val arrayToAdd : Array<String?> = arrayOfNulls(4)
+                    arrayToAdd[codePosition] = i_product.id
+                    arrayToAdd[namePosition] = i_product.getString("name")
+                    arrayToAdd[pricePosition] = i_product.getDouble("price").toString()
+                    arrayToAdd[amountPosition] = i_product.getLong("amount").toString()
+                    array += arrayToAdd
+                }
+                productAdapter.updateAll(array)
+            }else{
+                errorProductMutableLiveData.value = true
             }
-            productAdapter.updateAll(array)
+        }
+
+        fun assignProductsFromMutableMap(products: MutableMap<String, ProductsType>?){
+            if (!products.isNullOrEmpty()) {
+                var array = arrayOf<Array<String?>>()
+                for(i_product in products.asIterable()){
+                    val arrayToAdd : Array<String?> = arrayOfNulls(4)
+                    arrayToAdd[codePosition] = i_product.key
+                    arrayToAdd[namePosition] = i_product.value.name
+                    arrayToAdd[pricePosition] = i_product.value.price.toString()
+                    arrayToAdd[amountPosition] = i_product.value.amount.toString()
+                    array += arrayToAdd
+                }
+                productAdapter.updateAll(array)
+            }else{
+                errorProductMutableLiveData.value = true
+            }
+        }
+
+        var products: MutableList<DocumentSnapshot>
+        if(myDictionary.isSessionActive()){
+            val db = Firebase.firestore
+            db.collection("products")
+                .document(myDictionary.getUser())
+                .collection(myDictionary.getCategory())
+                .get().addOnSuccessListener { query ->
+                    products = query.documents
+                    assignProductsFromDocumentSnapshot(products)
+                }.addOnFailureListener{
+                    showDialog_DataBaseError(context, builder)
+                }
         }else{
-            errorProductMutableLiveData.value = true
+            val productFromDictionary = myDictionary.getAllProducts(myDictionary.getCategory())
+            assignProductsFromMutableMap(productFromDictionary)
         }
     }
 }

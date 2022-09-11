@@ -1,5 +1,6 @@
 package com.juanguicj.inventa_tu_tienda.fragments.user.changepassword
 
+import android.app.AlertDialog
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import android.text.Editable
@@ -29,6 +30,8 @@ class ChangePasswordFragment : Fragment() {
         super.onCreate(savedInstanceState)
         binding = FragmentChangePasswordBinding.inflate(layoutInflater)
         changePasswordViewModel = ViewModelProvider(this)[ChangePasswordViewModel::class.java]
+        val myContext = this@ChangePasswordFragment.requireContext()
+        val builder = activity?.let{ AlertDialog.Builder(it)}
 
         with(binding){
             changePasswordChangePasswordButton.setOnClickListener {
@@ -39,7 +42,7 @@ class ChangePasswordFragment : Fragment() {
                 val newPassword: String = changePasswordNewPasswordTextInputEditText.text.toString()
                 val repNewPassword: String = changePasswordRepeatNewPasswordTextInputEditText.text.toString()
 
-                changePasswordViewModel.checkChange(currentPassword, newPassword, repNewPassword)
+                changePasswordViewModel.checkChange(currentPassword, newPassword, repNewPassword, myContext, builder)
             }
 
             changePasswordViewModel.warningCurrentPasswordLiveData.observe(this@ChangePasswordFragment){
@@ -55,13 +58,9 @@ class ChangePasswordFragment : Fragment() {
             }
 
             changePasswordViewModel.successChangePasswordLiveData.observe(this@ChangePasswordFragment){
-                val newPassword = changePasswordNewPasswordTextInputEditText.text.toString()
-                mainViewModel.setNewPassword(myDictionary.getUser(), newPassword)
-
-                val text: Editable = SpannableStringBuilder("")
-                changePasswordCurrentPasswordTextInputEditText.text = text
-                changePasswordNewPasswordTextInputEditText.text = text
-                changePasswordRepeatNewPasswordTextInputEditText.text = text
+                changePasswordCurrentPasswordTextInputEditText.setText("")
+                changePasswordNewPasswordTextInputEditText.setText("")
+                changePasswordRepeatNewPasswordTextInputEditText.setText("")
 
                 val toast = Toast.makeText(activity, getString(R.string.changePassword__succesChangePassword), Toast
                     .LENGTH_SHORT)

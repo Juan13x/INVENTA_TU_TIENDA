@@ -14,7 +14,7 @@ const val pricePosition = 2
 const val amountPosition = 3
 
 class ProductAdapter: RecyclerView.Adapter<ProductAdapter.ViewHolder>() {
-    private var myData = arrayListOf<ArrayList<String?>>()
+    private var myData = arrayOf<Array<String?>>()
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val code: TextView = view.findViewById(R.id.products_code_textView)
@@ -30,35 +30,35 @@ class ProductAdapter: RecyclerView.Adapter<ProductAdapter.ViewHolder>() {
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.code.text = myData[position]?.get(codePosition).toString()
-        Log.i("code", myData[position]?.get(codePosition).toString())
+        holder.code.text = myData[position][codePosition].toString()
+        Log.i("code", myData[position][codePosition].toString())
 
-        holder.name.text = myData[position]?.get(namePosition).toString()
-        Log.i("name", myData[position]?.get(namePosition).toString())
+        holder.name.text = myData[position][namePosition].toString()
+        Log.i("name", myData[position][namePosition].toString())
 
-        holder.price.text = myData[position]?.get(pricePosition).toString()
-        Log.i("price", myData[position]?.get(pricePosition).toString())
+        holder.price.text = myData[position][pricePosition].toString()
+        Log.i("price", myData[position][pricePosition].toString())
 
-        holder.amount.text = myData[position]?.get(amountPosition).toString()
-        Log.i("amount", myData[position]?.get(amountPosition).toString())
+        holder.amount.text = myData[position][amountPosition].toString()
+        Log.i("amount", myData[position][amountPosition].toString())
     }
 
     fun deleteAll(){
-        myData = arrayListOf<ArrayList<String?>>()
+        myData = arrayOf<Array<String?>>()
         notifyDataSetChanged()
     }
-    fun updateAll(array: ArrayList<ArrayList<String?>>){
+    fun updateAll(array: Array<Array<String?>>){
         myData = array
         notifyDataSetChanged()
     }
 
-    fun addData(newData: ArrayList<String>): Boolean{
-        if(newData.size == 4){
-            myData.add(arrayListOf(newData[0],newData[1],newData[2],newData[3]))
-            return true
-        }
-        return false
-    }
+//    fun addData(newData: ArrayList<String>): Boolean{
+//        if(newData.size == 4){
+//            myData.add(arrayListOf(newData[0],newData[1],newData[2],newData[3]))
+//            return true
+//        }
+//        return false
+//    }
 
     override fun getItemCount(): Int {
         return myData.size

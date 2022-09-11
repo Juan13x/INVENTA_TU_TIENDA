@@ -44,17 +44,24 @@ class UserMainFragment : Fragment() {
             changePasswordButton.setOnClickListener {
                 Navigation.findNavController(userMainFragmentContainerView).navigate(R.id
                     .changePasswordFragment)
+                userMainFragmentContainerView.visibility = View.VISIBLE
             }
             mainViewModel.logInMainLiveData.observe(viewLifecycleOwner){
                     logIn->
                 if(logIn){
+                    logInLinearLayout.visibility = View.GONE
                     exitButton.visibility = View.VISIBLE
                     changePasswordButton.visibility = View.VISIBLE
+                    userMainFragmentContainerView.visibility = View.INVISIBLE
                     userInfoTextView.text = getString(R.string.userMain_userInfo__logIn_text,
                         myDictionary.getUser())
                 }else{
+                    logInLinearLayout.visibility = View.VISIBLE
                     exitButton.visibility = View.INVISIBLE
                     changePasswordButton.visibility = View.GONE
+                    userMainFragmentContainerView.visibility = View.VISIBLE
+                    Navigation.findNavController(userMainFragmentContainerView).navigate(R.id
+                        .logInFragment)
                     userInfoTextView.text = ""
                 }
             }

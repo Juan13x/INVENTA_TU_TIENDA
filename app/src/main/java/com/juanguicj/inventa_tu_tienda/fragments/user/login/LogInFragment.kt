@@ -1,17 +1,25 @@
 package com.juanguicj.inventa_tu_tienda.fragments.user.login
 
+import android.app.AlertDialog
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import android.text.Editable
 import android.text.SpannableStringBuilder
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
+import com.google.firebase.FirebaseError
+import com.google.firebase.FirebaseException
+import com.google.firebase.auth.*
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.internal.api.FirebaseNoSignedInUserException
+import com.google.firebase.ktx.Firebase
 import com.juanguicj.inventa_tu_tienda.R
 import com.juanguicj.inventa_tu_tienda.databinding.FragmentLogInBinding
-import com.juanguicj.inventa_tu_tienda.main.MainViewModel
+import com.juanguicj.inventa_tu_tienda.main.*
 
 class LogInFragment : Fragment() {
     private val mainViewModel: MainViewModel by activityViewModels()
@@ -28,7 +36,9 @@ class LogInFragment : Fragment() {
 
         binding = FragmentLogInBinding.inflate(layoutInflater)
         logInViewModel = ViewModelProvider(this)[LogInViewModel::class.java]
-
+        val builder: AlertDialog.Builder? = activity?.let {
+            AlertDialog.Builder(it)
+        }
         with(binding){
             logInViewModel.warningLiveData.observe(this@LogInFragment){
                     warning->
@@ -36,17 +46,16 @@ class LogInFragment : Fragment() {
             }
 
             logInViewModel.successLogInLiveData.observe(this@LogInFragment){
-                mainViewModel.setLogin(
-                    logInUserEditText.text.toString()
-                )
                 logInUserEditText.setText("")
                 loginPasswordTextInputEditText.setText("")
                 warningTextView.text = ""
+                mainViewModel.setLogin(myDictionary.getUser())
             }
 
             logInLogInButton.setOnClickListener {
-                logInViewModel.checkLogIn(logInUserEditText.text.toString(),
-                    loginPasswordTextInputEditText.text.toString())
+                val user = logInUserEditText.text.toString()
+                val password = loginPasswordTextInputEditText.text.toString()
+                logInViewModel.logInOperation(user, password, this@LogInFragment.requireContext(), builder)
             }
         }
     }

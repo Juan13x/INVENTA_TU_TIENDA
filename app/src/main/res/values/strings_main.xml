@@ -3,7 +3,10 @@
     <string name="tab_text_1">Log in</string>
     <string name="tab_text_2">Products</string>
     <string name="tab_text_3">Modify</string>
-
+    <string name="database_invalidEmail">The format of the email is wrong</string>
+    <string name="database_unknownAndUnIdentifiedError">Unknown or unclassified Error</string>
+    <string name="database__unknownError__error">Error Unknown by the Database</string>
+    <string name="database__expiredSession__error">Session Expired. Enter your Credentials again.</string>
     <!--UI-->
     <!--TEXT-->
     <string name="app_name">INVENTA TU TIENDA</string>

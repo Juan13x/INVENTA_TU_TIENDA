@@ -1,10 +1,20 @@
 package com.juanguicj.inventa_tu_tienda.fragments.user.signup
 
+import android.app.AlertDialog
+import android.content.Context
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.google.firebase.FirebaseError
+import com.google.firebase.auth.FirebaseAuthException
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import com.juanguicj.inventa_tu_tienda.R
+import com.juanguicj.inventa_tu_tienda.main.auth
 import com.juanguicj.inventa_tu_tienda.main.myDataBase
+import com.juanguicj.inventa_tu_tienda.main.myDictionary
+import com.juanguicj.inventa_tu_tienda.main.showDialog_DataBaseError
 
 class SignUpViewModel : ViewModel() {
     private val warningUserMutableLiveData: MutableLiveData<Boolean> = MutableLiveData()
@@ -52,7 +62,7 @@ class SignUpViewModel : ViewModel() {
         return false
     }
 
-    fun checkSignUp(user: String, password: String, repPassword: String){
+    fun signUp(user: String, password: String, repPassword: String, context: Context, builder: AlertDialog.Builder?){
         fun isLongPasswordOK(password: String): Boolean{
             return password.length > 6
         }
@@ -60,11 +70,28 @@ class SignUpViewModel : ViewModel() {
             if(checkEmail(user)){
                 if(password == repPassword){
                     if(isLongPasswordOK(password)){
-                        if(!myDataBase.containsUser(user)){
-                            successSignUpMutableLiveData.value = true
-                        } else{
-                            warningWrongMutableLiveData.value = R.string.signUp__existingUser
-                        }
+                        val db = Firebase.firestore
+                        auth.createUserWithEmailAndPassword(user, password)
+                            .addOnCompleteListener{ task ->
+                                if(task.isSuccessful){
+                                    myDictionary.setUser(user)
+                                    successSignUpMutableLiveData.value = true
+                                } else{
+                                    try{
+                                        throw task.exception!!
+                                    }catch (e: FirebaseAuthException){
+                                        val errorCode = e.errorCode
+                                        val errorMessage = e.message
+                                        Log.e("errorCode", errorCode)
+                                        Log.e("errorMessage", errorMessage ?: "")
+                                        when(errorCode){
+                                            "ERROR_INVALID_EMAIL" -> warningWrongMutableLiveData.value = R.string.signUp__wrongEmailAddress
+                                            "ERROR_EMAIL_ALREADY_IN_USE" -> warningWrongMutableLiveData.value = R.string.signUp__existingUser
+                                            else -> showDialog_DataBaseError(context, builder)
+                                        }
+                                    }
+                                }
+                            }
                     }
                     else{
                         warningWrongMutableLiveData.value = R.string.signUp__warningShortPassword

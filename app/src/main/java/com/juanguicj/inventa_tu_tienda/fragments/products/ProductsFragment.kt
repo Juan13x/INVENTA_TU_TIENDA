@@ -1,11 +1,12 @@
 package com.juanguicj.inventa_tu_tienda.fragments.products
 
+import android.app.AlertDialog
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView.OnItemClickListener
-import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -15,7 +16,6 @@ import com.juanguicj.inventa_tu_tienda.databinding.FragmentProductsBinding
 import com.juanguicj.inventa_tu_tienda.fragments.modify.products.ProductAdapter
 import com.juanguicj.inventa_tu_tienda.main.MainViewModel
 import com.juanguicj.inventa_tu_tienda.main.myDictionary
-
 
 class ProductsFragment : Fragment() {
 
@@ -34,9 +34,12 @@ class ProductsFragment : Fragment() {
     ): View {
         binding = FragmentProductsBinding.inflate(inflater, container, false)
         productsViewModel = ViewModelProvider(this)[ProductsViewModel::class.java]
+        val myContext = this@ProductsFragment.requireContext()
+        val builder: AlertDialog.Builder? = activity?.let {
+            AlertDialog.Builder(it)
+        }
 
         with(binding){
-            updateViewWhenCategoryChange()
             productsProductsReciclerView.adapter = productAdapter
 
             with(productsViewModel){
@@ -47,14 +50,13 @@ class ProductsFragment : Fragment() {
                     }
 
                 afterSelectionConfirmationLiveData.observe(viewLifecycleOwner){
-                    afterCategorySelected()
+                    afterCategorySelected(myContext, builder)
                 }
                 errorSystemLiveData.observe(viewLifecycleOwner){
                     Toast.makeText(requireContext().applicationContext, R.string.products__error__categoryErrorType, Toast.LENGTH_LONG).show()
                 }
                 errorCategoryLiveData.observe(viewLifecycleOwner){
-                    Toast.makeText(requireContext().applicationContext, R.string.products__error__category, Toast.LENGTH_LONG).show()
-                    productsProductsInfoTextView.text = getString(R.string.products__error__category)
+                    productsCategoryInfoTextView.text = getString(R.string.products__error__category)
                     hideCategoryList()
                     hideProductList()
                 }
@@ -72,26 +74,23 @@ class ProductsFragment : Fragment() {
                 mainViewModel.categoryChangeLiveData.observe(viewLifecycleOwner){
                     updateViewWhenCategoryChange()
                 }
-
-                mainViewModel.logInMainLiveData.observe(viewLifecycleOwner){
-                    updateViewWhenCategoryChange()
-                }
             }
         }
 
         return binding.root
     }
 
-    private fun FragmentProductsBinding.afterCategorySelected() {
+    private fun FragmentProductsBinding.afterCategorySelected(myContext: Context, builder: AlertDialog.Builder?) {
         productsProductsInfoTextView.visibility = View.VISIBLE
         productsProductsInfoTextView.text = getString(R.string.products__text__productInfo, myDictionary.getCategory())
         productsProductsReciclerView.visibility = View.VISIBLE
         with(productsViewModel){
-            getProductList(productAdapter)
+            getProductList(productAdapter, myContext, builder)
         }
     }
 
     private fun FragmentProductsBinding.updateViewWhenCategoryChange() {
+        productsCategoryInfoTextView.text = getString(R.string.products__text__categoryInfo)
         hideProductList()
         updateCategoryList()
         productsProductsInfoTextView.text = ""
@@ -108,13 +107,7 @@ class ProductsFragment : Fragment() {
 
     private fun FragmentProductsBinding.updateCategoryList() {
         with(productsViewModel){
-            val categories = getCategoryList()
-            if(categories != null){
-                val adapter = ArrayAdapter(this@ProductsFragment.requireContext(), android.R.layout.simple_list_item_1, categories)
-                productsCategoriesListView.adapter = adapter
-            }else{
-                productsCategoriesListView.adapter = null
-            }
+            getCategoryList(productsCategoriesListView, this@ProductsFragment.requireContext())
         }
     }
 }

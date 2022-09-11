@@ -35,11 +35,14 @@ class ModifyCategoryFragment : Fragment() {
         binding = FragmentModifyCategoryBinding.inflate(layoutInflater)
         modifyCategoryViewModel = ViewModelProvider(this)[ModifyCategoryViewModel::class.java]
         val myContext = this.requireContext()
+        val builder: AlertDialog.Builder? = activity?.let{
+            AlertDialog.Builder(it)
+        }
 
         with(binding){
             with(modifyCategoryViewModel){
                 modifyCategoriesOperateButton.setOnClickListener {
-                    ADD_operation(modifyCategoriesNewCategoryEditText.text.toString())
+                    ADD_operation(modifyCategoriesNewCategoryEditText.text.toString(), myContext, builder)
                 }
 
                 errorLiveData.observe(this@ModifyCategoryFragment){
@@ -47,20 +50,15 @@ class ModifyCategoryFragment : Fragment() {
                     val toast = Toast.makeText(requireContext().applicationContext, error, Toast.LENGTH_SHORT)
                     toast.show()
                 }
-                confirmationADDLiveData.observe(this@ModifyCategoryFragment){
-                    val message = getString(R.string.modifyCategories__ADD__confirmation)
+                simpleConfirmationLiveData.observe(this@ModifyCategoryFragment){
+                        CONFIRMATION ->
+                    val message = getString(CONFIRMATION)
                     mainViewModel.setCategoryChange()
                     modifyCategoriesNewCategoryEditText.setText("")
                     val toast = Toast.makeText(requireContext().applicationContext, message, Toast.LENGTH_SHORT)
                     toast.show()
                 }
-                confirmationRENAMELiveData.observe(this@ModifyCategoryFragment){
-                    val message = getString(R.string.modifyCategories__RENAME__confirmation)
-                    mainViewModel.setCategoryChange()
-                    modifyCategoriesNewCategoryEditText.setText("")
-                    val toast = Toast.makeText(requireContext().applicationContext, message, Toast.LENGTH_SHORT)
-                    toast.show()
-                }
+
                 confirmationERASELiveData.observe(this@ModifyCategoryFragment){
                     val builder: AlertDialog.Builder? = activity?.let {
                         AlertDialog.Builder(it)
@@ -69,7 +67,7 @@ class ModifyCategoryFragment : Fragment() {
                     val message = getString(R.string.modifyCategories__ERASE__alert, category)
                     builder?.setMessage(message)
                         ?.setPositiveButton(R.string.modifyCategories__positiveOption__dialog){ _, _ ->
-                            DELETE_operation(category)
+                            DELETE_operation(category, myContext, builder)
                             mainViewModel.setCategoryChange()
                             val messageToast = getString(R.string.modifyCategories__ERASE__confirmation)
                             val toast = Toast.makeText(requireContext().applicationContext, messageToast, Toast.LENGTH_LONG)
@@ -83,14 +81,14 @@ class ModifyCategoryFragment : Fragment() {
                     showRenameFields()
                     modifyCategoriesOperateButton.text = getString(R.string.modifyCategories__add__text)
                     modifyCategoriesOperateButton.setOnClickListener {
-                        ADD_operation(modifyCategoriesNewCategoryEditText.text.toString())
+                        ADD_operation(modifyCategoriesNewCategoryEditText.text.toString(), myContext, builder)
                     }
                 }
                 modifyCategoriesDeleteButton.setOnClickListener {
                     hideRenameFields()
                     modifyCategoriesOperateButton.text = getString(R.string.modifyCategories__erase__text)
                     modifyCategoriesOperateButton.setOnClickListener {
-                        checkFields_for_ERASE(modifyCategoriesSelectedCategorySpinner.selectedItem.toString())
+                        checkFields_for_ERASE(modifyCategoriesSelectedCategorySpinner)
                     }
                 }
                 modifyCategoriesRenameButton.setOnClickListener {
@@ -99,23 +97,10 @@ class ModifyCategoryFragment : Fragment() {
                     modifyCategoriesOperateButton.setOnClickListener {
                         val selectedCategory = modifyCategoriesSelectedCategorySpinner.selectedItem.toString()
                         val renameCategory = modifyCategoriesNewCategoryEditText.text.toString()
-                        RENAME_Operation(selectedCategory, renameCategory)
+                        RENAME_Operation(selectedCategory, renameCategory, myContext, builder)
                     }
                 }
 
-                if(myDictionary.isSessionActive()){
-                    mainViewModel.linkFunctionGetUpdatedCategoriesToDataBase()
-                }
-                setSpinnerEntries(modifyCategoriesSelectedCategorySpinner, myContext, mainViewModel)
-                mainViewModel.logInMainLiveData.observe(this@ModifyCategoryFragment){
-                        logIn->
-                    if(logIn){
-                        mainViewModel.linkFunctionGetUpdatedCategoriesToDataBase()
-                    }else{
-                        mainViewModel.linkFunctionGetUpdatedCategoriesToDictionary()
-                    }
-                    setSpinnerEntries(modifyCategoriesSelectedCategorySpinner, myContext, mainViewModel)
-                }
                 mainViewModel.categoryChangeLiveData.observe(this@ModifyCategoryFragment){
                     setSpinnerEntries(modifyCategoriesSelectedCategorySpinner, myContext, mainViewModel)
                 }

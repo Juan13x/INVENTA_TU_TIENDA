@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!---->
+    <string name="modifyCategories__database__categoryNotFound__error">The Category was not found. Maybe was deleted or renamed at the same time</string>
     <string name="modifyCategories__emptyRename__error">The field \"New Category Name\" is empty</string>
     <string name="modifyCategories__emptyCategory__error">The field \"Select a Category\" is empty. Add a new Category to proceed</string>
     <string name="modifyCategories__NewCategoryIncluded__error">The category already exists. Add a different One</string>

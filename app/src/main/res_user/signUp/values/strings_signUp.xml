@@ -10,7 +10,7 @@
     <!--UI-->
     <!--TEXT-->
     <string name="signUp__filter">QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklñzxcvbnm1234567890_</string>
-    <string name="signUp_signUp__text">Log In</string>
+    <string name="signUp_signUp__text">Sign In</string>
     <string name="signUp_userInfo__text">User</string>
     <string name="signUp_passwordInfo__text">Password</string>
     <string name="signUp_repeatPasswordInfo__text">Confirm Password</string>

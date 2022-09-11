@@ -1,5 +1,6 @@
 package com.juanguicj.inventa_tu_tienda.fragments.user.signup
 
+import android.app.AlertDialog
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import android.text.Editable
@@ -15,6 +16,7 @@ import androidx.fragment.app.activityViewModels
 import com.juanguicj.inventa_tu_tienda.R
 import com.juanguicj.inventa_tu_tienda.databinding.FragmentSignUpBinding
 import com.juanguicj.inventa_tu_tienda.main.MainViewModel
+import com.juanguicj.inventa_tu_tienda.main.myDictionary
 import java.util.*
 import kotlin.concurrent.timerTask
 
@@ -32,6 +34,9 @@ class SignUpFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = FragmentSignUpBinding.inflate(layoutInflater)
+        val builder: AlertDialog.Builder? = activity.let {
+            AlertDialog.Builder(it)
+        }
 
         signUPViewModel = ViewModelProvider(this)[SignUpViewModel::class.java]
 
@@ -43,7 +48,7 @@ class SignUpFragment : Fragment() {
                 val password: String = signUpPasswordTextInputEditText.text.toString()
                 val repPassword: String = signUpRepeatPasswordTextInputEditText.text.toString()
 
-                signUPViewModel.checkSignUp(user, password, repPassword)
+                signUPViewModel.signUp(user, password, repPassword, this@SignUpFragment.requireContext(), builder)
             }
 
             signUPViewModel.warningUserLiveData.observe(this@SignUpFragment){
@@ -55,15 +60,14 @@ class SignUpFragment : Fragment() {
             }
 
             signUPViewModel.warningRepeatPasswordLiveData.observe(this@SignUpFragment){
-                signUpPasswordTextInputLayout.error = getString(R.string.signUp__emptyPassword)
+                signUpRepeatPasswordTextInputLayout.error = getString(R.string.signUp__emptyPassword)
             }
 
             signUPViewModel.successSignUpLiveData.observe(this@SignUpFragment){
-                mainViewModel.setSignUp(signUpUserEditText.text.toString(),
-                    signUpPasswordTextInputEditText.text.toString())
                 signUpUserEditText.setText("")
                 signUpPasswordTextInputEditText.setText("")
                 signUpRepeatPasswordTextInputEditText.setText("")
+                mainViewModel.setLogin(myDictionary.getUser())
             }
 
             signUPViewModel.warningWrongLiveData.observe(this@SignUpFragment){
