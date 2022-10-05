@@ -1,4 +1,4 @@
-package com.juanguicj.inventa_tu_tienda.persistance
+package com.juanguicj.inventa_tu_tienda.persistance.user
 
 import androidx.room.Database
 import androidx.room.RoomDatabase

@@ -26,6 +26,9 @@ class ModifyCategoryViewModel : ViewModel() {
     private val confirmationERASEMutableLiveData: MutableLiveData<Boolean> = MutableLiveData()
     val confirmationERASELiveData: LiveData<Boolean> = confirmationERASEMutableLiveData
 
+    private val confirmationEraseOperationMutableLiveData: MutableLiveData<Boolean> = MutableLiveData()
+    val confirmationEraseOperationLiveData: LiveData<Boolean> = confirmationEraseOperationMutableLiveData
+
     fun ADD_operation(nameCategory: String, context: Context, builder: AlertDialog.Builder?){
         if(nameCategory.isEmpty()){
             errorMutableLiveData.value = R.string.modifyCategories__emptyRename__error
@@ -103,19 +106,26 @@ class ModifyCategoryViewModel : ViewModel() {
     }
 
     fun DELETE_operation(selectedCategory: String, context: Context, builder: AlertDialog.Builder?){
-        viewModelScope.launch() {
+        viewModelScope.launch{
             if(myDictionary.isSessionActive()){
                 val db = Firebase.firestore
                 categories.remove(selectedCategory)
                 db.collection("categories")
                     .document(myDictionary.getUser())
                     .set(hashMapOf("0" to categories))
+                    .addOnSuccessListener {
+                        confirmationEraseOperationMutableLiveData.value = true
+                    }
                     .addOnFailureListener{
                         categories.add(selectedCategory)
                         showDialog_DataBaseError(context, builder)
                     }
             }else{
-                myDictionary.deleteCategory(selectedCategory)
+                if(myDictionary.deleteCategory(selectedCategory)){
+                    categories.remove(selectedCategory)
+                    confirmationEraseOperationMutableLiveData.value = true
+                }
+
             }
         }
     }

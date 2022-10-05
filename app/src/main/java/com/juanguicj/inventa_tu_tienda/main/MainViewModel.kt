@@ -73,10 +73,12 @@ class MainViewModel: ViewModel() {
     }
 
     fun getCategoriesFromDictionary(){
-        val categoriesList = myDictionary.getCategories()
-        categories.clear()
-        categories.addAll(categoriesList)
-        setCategoryChange()
+        viewModelScope.launch {
+            val categoriesList = myDictionary.getCategories()
+            categories.clear()
+            categories.addAll(categoriesList)
+            setCategoryChange()
+        }
     }
 
     fun isSessionActive() {

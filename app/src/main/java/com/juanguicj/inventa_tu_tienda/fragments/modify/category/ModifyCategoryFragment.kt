@@ -68,14 +68,18 @@ class ModifyCategoryFragment : Fragment() {
                     builder?.setMessage(message)
                         ?.setPositiveButton(R.string.modifyCategories__positiveOption__dialog){ _, _ ->
                             DELETE_operation(category, myContext, builder)
-                            mainViewModel.setCategoryChange()
-                            val messageToast = getString(R.string.modifyCategories__ERASE__confirmation)
-                            val toast = Toast.makeText(requireContext().applicationContext, messageToast, Toast.LENGTH_LONG)
-                            toast.show()
                         }
                         ?.setNegativeButton(R.string.modifyCategories__negativeOption__dialog){ _,_-> }
                     builder?.create()?.show()
                 }
+
+                confirmationEraseOperationLiveData.observe(this@ModifyCategoryFragment){
+                    mainViewModel.setCategoryChange()
+                    val messageToast = getString(R.string.modifyCategories__ERASE__confirmation)
+                    val toast = Toast.makeText(requireContext().applicationContext, messageToast, Toast.LENGTH_LONG)
+                    toast.show()
+                }
+
 
                 modifyCategoriesAddButton.setOnClickListener {
                     showRenameFields()
