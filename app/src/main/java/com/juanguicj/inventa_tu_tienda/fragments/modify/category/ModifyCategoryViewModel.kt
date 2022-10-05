@@ -7,12 +7,14 @@ import android.widget.Spinner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.google.firebase.FirebaseError
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.juanguicj.inventa_tu_tienda.R
 import com.juanguicj.inventa_tu_tienda.main.*
+import kotlinx.coroutines.launch
 
 class ModifyCategoryViewModel : ViewModel() {
     private val errorMutableLiveData: MutableLiveData<Int> = MutableLiveData()
@@ -32,22 +34,24 @@ class ModifyCategoryViewModel : ViewModel() {
             if(nameCategory in categories){
                 errorMutableLiveData.value = R.string.modifyCategories__NewCategoryIncluded__error
             }else {
-                if(myDictionary.isSessionActive()){
-                    val db = Firebase.firestore
-                    categories.apply { add(nameCategory) }
-                    db.collection("categories")
-                        .document(myDictionary.getUser())
-                        .set(hashMapOf("0" to categories))
-                        .addOnSuccessListener{
-                            simpleConfirmationMutableLiveData.value = R.string.modifyCategories__ADD__confirmation
-                        }.addOnFailureListener {
-                            categories.remove(nameCategory)
-                            showDialog_DataBaseError(context, builder)
-                        }
-                }else{
-                    myDictionary.addCategory(nameCategory)
-                    categories.add(nameCategory)
-                    simpleConfirmationMutableLiveData.value = R.string.modifyCategories__ADD__confirmation
+                viewModelScope.launch() {
+                    if(myDictionary.isSessionActive()){
+                        val db = Firebase.firestore
+                        categories.apply { add(nameCategory) }
+                        db.collection("categories")
+                            .document(myDictionary.getUser())
+                            .set(hashMapOf("0" to categories))
+                            .addOnSuccessListener{
+                                simpleConfirmationMutableLiveData.value = R.string.modifyCategories__ADD__confirmation
+                            }.addOnFailureListener {
+                                categories.remove(nameCategory)
+                                showDialog_DataBaseError(context, builder)
+                            }
+                    }else{
+                        myDictionary.addCategory(nameCategory)
+                        categories.add(nameCategory)
+                        simpleConfirmationMutableLiveData.value = R.string.modifyCategories__ADD__confirmation
+                    }
                 }
             }
         }
@@ -66,24 +70,26 @@ class ModifyCategoryViewModel : ViewModel() {
         else if(newName in categories){
             errorMutableLiveData.value = R.string.modifyCategories__NewCategoryIncluded__error
         }else{
-            if(myDictionary.isSessionActive()){
-                val db = Firebase.firestore
-                val index = categories.indexOf(currentCategory)
-                categories[index] = newName
-                db.collection("categories")
-                    .document(myDictionary.getUser())
-                    .set(hashMapOf("0" to categories))
-                    .addOnSuccessListener{
-                        simpleConfirmationMutableLiveData.value = R.string.modifyCategories__RENAME__confirmation
-                    }.addOnFailureListener{
-                        categories[index] = currentCategory
-                        showDialog_DataBaseError(context, builder)
-                    }
-            } else{
-                val index = categories.indexOf(currentCategory)
-                myDictionary.renameCategory(currentCategory, newName)
-                categories[index] = newName
-                simpleConfirmationMutableLiveData.value = R.string.modifyCategories__RENAME__confirmation
+            viewModelScope.launch() {
+                if(myDictionary.isSessionActive()){
+                    val db = Firebase.firestore
+                    val index = categories.indexOf(currentCategory)
+                    categories[index] = newName
+                    db.collection("categories")
+                        .document(myDictionary.getUser())
+                        .set(hashMapOf("0" to categories))
+                        .addOnSuccessListener{
+                            simpleConfirmationMutableLiveData.value = R.string.modifyCategories__RENAME__confirmation
+                        }.addOnFailureListener{
+                            categories[index] = currentCategory
+                            showDialog_DataBaseError(context, builder)
+                        }
+                } else{
+                    val index = categories.indexOf(currentCategory)
+                    myDictionary.renameCategory(currentCategory, newName)
+                    categories[index] = newName
+                    simpleConfirmationMutableLiveData.value = R.string.modifyCategories__RENAME__confirmation
+                }
             }
         }
     }
@@ -97,18 +103,20 @@ class ModifyCategoryViewModel : ViewModel() {
     }
 
     fun DELETE_operation(selectedCategory: String, context: Context, builder: AlertDialog.Builder?){
-        if(myDictionary.isSessionActive()){
-            val db = Firebase.firestore
-            categories.remove(selectedCategory)
-            db.collection("categories")
-                .document(myDictionary.getUser())
-                .set(hashMapOf("0" to categories))
-                .addOnFailureListener{
-                    categories.add(selectedCategory)
-                    showDialog_DataBaseError(context, builder)
-                }
-        }else{
-            myDictionary.deleteCategory(selectedCategory)
+        viewModelScope.launch() {
+            if(myDictionary.isSessionActive()){
+                val db = Firebase.firestore
+                categories.remove(selectedCategory)
+                db.collection("categories")
+                    .document(myDictionary.getUser())
+                    .set(hashMapOf("0" to categories))
+                    .addOnFailureListener{
+                        categories.add(selectedCategory)
+                        showDialog_DataBaseError(context, builder)
+                    }
+            }else{
+                myDictionary.deleteCategory(selectedCategory)
+            }
         }
     }
 }

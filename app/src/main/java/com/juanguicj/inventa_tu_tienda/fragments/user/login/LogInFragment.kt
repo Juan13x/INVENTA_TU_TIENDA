@@ -20,6 +20,8 @@ import com.google.firebase.ktx.Firebase
 import com.juanguicj.inventa_tu_tienda.R
 import com.juanguicj.inventa_tu_tienda.databinding.FragmentLogInBinding
 import com.juanguicj.inventa_tu_tienda.main.*
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 
 class LogInFragment : Fragment() {
     private val mainViewModel: MainViewModel by activityViewModels()
@@ -49,7 +51,12 @@ class LogInFragment : Fragment() {
                 logInUserEditText.setText("")
                 loginPasswordTextInputEditText.setText("")
                 warningTextView.text = ""
-                mainViewModel.setLogin(myDictionary.getUser())
+                runBlocking {
+                    launch {
+                        mainViewModel.setLogin(myDictionary.getUser())
+                    }
+                }
+
             }
 
             logInLogInButton.setOnClickListener {

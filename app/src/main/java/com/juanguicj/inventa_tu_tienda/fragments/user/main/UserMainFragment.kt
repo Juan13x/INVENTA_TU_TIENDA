@@ -11,6 +11,8 @@ import com.juanguicj.inventa_tu_tienda.R
 import com.juanguicj.inventa_tu_tienda.databinding.FragmentUsermainBinding
 import com.juanguicj.inventa_tu_tienda.main.MainViewModel
 import com.juanguicj.inventa_tu_tienda.main.myDictionary
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 
 /**
  * A placeholder fragment containing a simple view.
@@ -53,8 +55,12 @@ class UserMainFragment : Fragment() {
                     exitButton.visibility = View.VISIBLE
                     changePasswordButton.visibility = View.VISIBLE
                     userMainFragmentContainerView.visibility = View.INVISIBLE
-                    userInfoTextView.text = getString(R.string.userMain_userInfo__logIn_text,
-                        myDictionary.getUser())
+                    runBlocking {
+                        launch {
+                            userInfoTextView.text = getString(R.string.userMain_userInfo__logIn_text, myDictionary.getUser())
+                        }
+                    }
+
                 }else{
                     logInLinearLayout.visibility = View.VISIBLE
                     exitButton.visibility = View.INVISIBLE

@@ -1,7 +1,10 @@
 package com.juanguicj.inventa_tu_tienda.main
 
 import android.app.AlertDialog
+import android.content.Context
 import android.os.Bundle
+import android.util.AttributeSet
+import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
 import com.google.android.material.tabs.TabLayout
@@ -9,6 +12,8 @@ import androidx.viewpager.widget.ViewPager
 import androidx.appcompat.app.AppCompatActivity
 import com.juanguicj.inventa_tu_tienda.R
 import com.juanguicj.inventa_tu_tienda.databinding.ActivityMainBinding
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -17,7 +22,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         myDictionary.create() //just for testing
-        myDataBase.create() //just for testing
+        myCloudDataBase.create() //just for testing
         val builder: AlertDialog.Builder = this.let{
             AlertDialog.Builder(it)
         }
@@ -31,17 +36,20 @@ class MainActivity : AppCompatActivity() {
         val tabs: TabLayout = binding.tabs
         tabs.setupWithViewPager(viewPager)
 
-        if (myDictionary.isSessionActive()) {
-            val user = auth.currentUser
-            if(user != null){
-                mainViewModel.getCategoriesFromDataBase(this@MainActivity, builder)
+        mainViewModel.isSessionActive_Coroutine_LiveData.observe(this@MainActivity){
+                isSessionActive->
+            if (isSessionActive) {
+                val user = auth.currentUser
+                if(user != null){
+                    mainViewModel.setSimpleLogin()
+                }else{
+                    mainViewModel.clearLoginMain()
+                    Toast.makeText(this@MainActivity, R.string.database__expiredSession__error, Toast.LENGTH_LONG).show()
+                }
             }else{
-                mainViewModel.clearLoginMain()
-                Toast.makeText(this@MainActivity, R.string.database__expiredSession__error, Toast.LENGTH_LONG).show()
+                mainViewModel.getCategoriesFromDictionary()
+                mainViewModel.setCategoryChange()
             }
-        }else{
-            mainViewModel.getCategoriesFromDictionary()
-            mainViewModel.setCategoryChange()
         }
 
         mainViewModel.logInMainLiveData.observe(this@MainActivity){
@@ -54,5 +62,10 @@ class MainActivity : AppCompatActivity() {
                 mainViewModel.getCategoriesFromDictionary()
             }
         }
+    }
+
+    override fun onStart(){
+        super.onStart()
+        mainViewModel.isSessionActive()
     }
 }

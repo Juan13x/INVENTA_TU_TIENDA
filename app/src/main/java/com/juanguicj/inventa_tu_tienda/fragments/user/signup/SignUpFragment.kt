@@ -17,6 +17,8 @@ import com.juanguicj.inventa_tu_tienda.R
 import com.juanguicj.inventa_tu_tienda.databinding.FragmentSignUpBinding
 import com.juanguicj.inventa_tu_tienda.main.MainViewModel
 import com.juanguicj.inventa_tu_tienda.main.myDictionary
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import java.util.*
 import kotlin.concurrent.timerTask
 
@@ -67,7 +69,11 @@ class SignUpFragment : Fragment() {
                 signUpUserEditText.setText("")
                 signUpPasswordTextInputEditText.setText("")
                 signUpRepeatPasswordTextInputEditText.setText("")
-                mainViewModel.setLogin(myDictionary.getUser())
+                runBlocking {
+                    launch {
+                        mainViewModel.setLogin(myDictionary.getUser())
+                    }
+                }
             }
 
             signUPViewModel.warningWrongLiveData.observe(this@SignUpFragment){

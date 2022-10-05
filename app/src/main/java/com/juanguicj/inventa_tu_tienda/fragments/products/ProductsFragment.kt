@@ -16,6 +16,8 @@ import com.juanguicj.inventa_tu_tienda.databinding.FragmentProductsBinding
 import com.juanguicj.inventa_tu_tienda.fragments.modify.products.ProductAdapter
 import com.juanguicj.inventa_tu_tienda.main.MainViewModel
 import com.juanguicj.inventa_tu_tienda.main.myDictionary
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 
 class ProductsFragment : Fragment() {
 
@@ -82,11 +84,16 @@ class ProductsFragment : Fragment() {
 
     private fun FragmentProductsBinding.afterCategorySelected(myContext: Context, builder: AlertDialog.Builder?) {
         productsProductsInfoTextView.visibility = View.VISIBLE
-        productsProductsInfoTextView.text = getString(R.string.products__text__productInfo, myDictionary.getCategory())
-        productsProductsReciclerView.visibility = View.VISIBLE
-        with(productsViewModel){
-            getProductList(productAdapter, myContext, builder)
+        runBlocking{
+            launch{
+                productsProductsInfoTextView.text = getString(R.string.products__text__productInfo, myDictionary.getCategory())
+                productsProductsReciclerView.visibility = View.VISIBLE
+                with(productsViewModel){
+                    getProductList(productAdapter, myContext, builder)
+                }
+            }
         }
+
     }
 
     private fun FragmentProductsBinding.updateViewWhenCategoryChange() {

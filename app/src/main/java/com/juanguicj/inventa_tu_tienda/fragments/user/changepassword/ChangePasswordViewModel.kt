@@ -6,17 +6,14 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.google.firebase.FirebaseError
-import com.google.firebase.auth.EmailAuthCredential
+import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuthException
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
 import com.juanguicj.inventa_tu_tienda.R
 import com.juanguicj.inventa_tu_tienda.main.auth
-import com.juanguicj.inventa_tu_tienda.main.myDataBase
 import com.juanguicj.inventa_tu_tienda.main.myDictionary
 import com.juanguicj.inventa_tu_tienda.main.showDialog_DataBaseError
+import kotlinx.coroutines.launch
 
 class ChangePasswordViewModel : ViewModel() {
     var errorMessage: String = ""
@@ -60,32 +57,34 @@ class ChangePasswordViewModel : ViewModel() {
                 if(newPassword == repNewPassword){
                     if(isLongPasswordOK(newPassword)){
                         val user = auth.currentUser!! //TODO() = consider the user is not signedIn anymore
-                        val credentials = EmailAuthProvider.getCredential(myDictionary.getUser(), currentPassword)
-                        user.reauthenticate(credentials)
-                            .addOnCompleteListener{ task ->
-                                if(task.isSuccessful){
-                                    user.updatePassword(newPassword).addOnSuccessListener {
-                                        successChangePasswordMutableLiveData.value = true
-                                    }.addOnFailureListener{
-                                        showDialog_DataBaseError(context, builder)
-                                    }
+                        viewModelScope.launch {
+                            val credentials = EmailAuthProvider.getCredential(myDictionary.getUser(), currentPassword)
+                            user.reauthenticate(credentials)
+                                .addOnCompleteListener{ task ->
+                                    if(task.isSuccessful){
+                                        user.updatePassword(newPassword).addOnSuccessListener {
+                                            successChangePasswordMutableLiveData.value = true
+                                        }.addOnFailureListener{
+                                            showDialog_DataBaseError(context, builder)
+                                        }
 
-                                }
-                                else{
-                                    try {
-                                        throw task.exception!!
-                                    }catch(e: FirebaseAuthException){
-                                        val errorCode = e.errorCode
-                                        val errorMessage = e.message
-                                        Log.e("errorCode", errorCode)
-                                        Log.e("errorMessage", errorMessage ?: "")
-                                        when(errorCode){
-                                            "ERROR_INVALID_CREDENTIAL" -> warningWrongMutableLiveData.value = R.string.changePassword__wrongCurrentPassword
-                                            else -> showDialog_DataBaseError(context, builder)
+                                    }
+                                    else{
+                                        try {
+                                            throw task.exception!!
+                                        }catch(e: FirebaseAuthException){
+                                            val errorCode = e.errorCode
+                                            val errorMessage = e.message
+                                            Log.e("errorCode", errorCode)
+                                            Log.e("errorMessage", errorMessage ?: "")
+                                            when(errorCode){
+                                                "ERROR_INVALID_CREDENTIAL" -> warningWrongMutableLiveData.value = R.string.changePassword__wrongCurrentPassword
+                                                else -> showDialog_DataBaseError(context, builder)
+                                            }
                                         }
                                     }
                                 }
-                            }
+                        }
                     }
                     else{
                         warningWrongMutableLiveData.value = R.string.changePassword__passwordLengthWrong

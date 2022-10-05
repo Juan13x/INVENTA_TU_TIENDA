@@ -6,15 +6,15 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.google.firebase.FirebaseError
+import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuthException
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.juanguicj.inventa_tu_tienda.R
 import com.juanguicj.inventa_tu_tienda.main.auth
-import com.juanguicj.inventa_tu_tienda.main.myDataBase
 import com.juanguicj.inventa_tu_tienda.main.myDictionary
 import com.juanguicj.inventa_tu_tienda.main.showDialog_DataBaseError
+import kotlinx.coroutines.launch
 
 class SignUpViewModel : ViewModel() {
     private val warningUserMutableLiveData: MutableLiveData<Boolean> = MutableLiveData()
@@ -74,8 +74,10 @@ class SignUpViewModel : ViewModel() {
                         auth.createUserWithEmailAndPassword(user, password)
                             .addOnCompleteListener{ task ->
                                 if(task.isSuccessful){
-                                    myDictionary.setUser(user)
-                                    successSignUpMutableLiveData.value = true
+                                    viewModelScope.launch {
+                                        myDictionary.setUser(user)
+                                        successSignUpMutableLiveData.value = true
+                                    }
                                 } else{
                                     try{
                                         throw task.exception!!

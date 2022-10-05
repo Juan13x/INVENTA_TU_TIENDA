@@ -8,14 +8,16 @@ import android.widget.ListView
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.juanguicj.inventa_tu_tienda.fragments.modify.products.*
 import com.juanguicj.inventa_tu_tienda.main.ProductsType
-import com.juanguicj.inventa_tu_tienda.main.myDataBase
+import com.juanguicj.inventa_tu_tienda.main.myCloudDataBase
 import com.juanguicj.inventa_tu_tienda.main.myDictionary
 import com.juanguicj.inventa_tu_tienda.main.showDialog_DataBaseError
+import kotlinx.coroutines.launch
 
 class ProductsViewModel : ViewModel() {
     private val errorCategoryMutableLiveData: MutableLiveData<Boolean> = MutableLiveData()
@@ -29,24 +31,28 @@ class ProductsViewModel : ViewModel() {
 
 
     fun getCategoryList(listView: ListView, context: Context){
-        val categories = if(myDictionary.isSessionActive()){
-            myDataBase.getCategories(myDictionary.getUser())?.toMutableList()
-        }else{
-            myDictionary.getCategories().toMutableList()
-        }
-        if(categories.isNullOrEmpty()){
-            errorCategoryMutableLiveData.value = true
-            listView.adapter = null
-        } else{
-            val adapter = ArrayAdapter(context, R.layout.simple_list_item_1, categories)
-            listView.adapter = adapter
+        viewModelScope.launch(){
+            val categories = if(myDictionary.isSessionActive()){
+                myCloudDataBase.getCategories(myDictionary.getUser())?.toMutableList()
+            }else{
+                myDictionary.getCategories().toMutableList()
+            }
+            if(categories.isNullOrEmpty()){
+                errorCategoryMutableLiveData.value = true
+                listView.adapter = null
+            } else{
+                val adapter = ArrayAdapter(context, R.layout.simple_list_item_1, categories)
+                listView.adapter = adapter
+            }
         }
     }
 
     fun checkCategoryField(category: Any){
         if(category is String){
-            myDictionary.setCategory(category)
-            afterSelectionConfirmationMutableLiveData.value = true
+            viewModelScope.launch() {
+                myDictionary.setCategory(category)
+                afterSelectionConfirmationMutableLiveData.value = true
+            }
         }else{
             errorSystemMutableLiveData.value = true
         }
@@ -88,20 +94,22 @@ class ProductsViewModel : ViewModel() {
         }
 
         var products: MutableList<DocumentSnapshot>
-        if(myDictionary.isSessionActive()){
-            val db = Firebase.firestore
-            db.collection("products")
-                .document(myDictionary.getUser())
-                .collection(myDictionary.getCategory())
-                .get().addOnSuccessListener { query ->
-                    products = query.documents
-                    assignProductsFromDocumentSnapshot(products)
-                }.addOnFailureListener{
-                    showDialog_DataBaseError(context, builder)
-                }
-        }else{
-            val productFromDictionary = myDictionary.getAllProducts(myDictionary.getCategory())
-            assignProductsFromMutableMap(productFromDictionary)
+        viewModelScope.launch() {
+            if(myDictionary.isSessionActive()){
+                val db = Firebase.firestore
+                db.collection("products")
+                    .document(myDictionary.getUser())
+                    .collection(myDictionary.getCategory())
+                    .get().addOnSuccessListener { query ->
+                        products = query.documents
+                        assignProductsFromDocumentSnapshot(products)
+                    }.addOnFailureListener{
+                        showDialog_DataBaseError(context, builder)
+                    }
+            }else{
+                val productFromDictionary = myDictionary.getAllProducts(myDictionary.getCategory())
+                assignProductsFromMutableMap(productFromDictionary)
+            }
         }
     }
 }

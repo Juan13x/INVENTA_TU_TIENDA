@@ -6,10 +6,12 @@ import android.widget.Spinner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.juanguicj.inventa_tu_tienda.R
 import com.juanguicj.inventa_tu_tienda.main.*
+import kotlinx.coroutines.launch
 
 class ModifyProductsViewModel : ViewModel() {
     data class ProductInfo(var code: String,
@@ -69,32 +71,33 @@ class ModifyProductsViewModel : ViewModel() {
         }
 
         if(checkFieldAddOperation(code, name, amount, price)){
-            if(myDictionary.isSessionActive()){
-                val user = myDictionary.getUser()
-                val db = Firebase.firestore
-                val query = db.collection("products")
-                    .document(user)
-                    .collection(category.selectedItem.toString())
-                    .document(code)
-                query.get()
-                    .addOnSuccessListener{ document ->
-                        if(document.exists()){
-                            errorMutableLiveData.value = R.string.modifyProducts__existingCode__error
-                        }else{
-                            query.set(ProductsType(name, amount.toInt(), price.toFloat()))
-                            confirmationADDMutableLiveData.value = true
+            viewModelScope.launch() {
+                if (myDictionary.isSessionActive()) {
+                    val user = myDictionary.getUser()
+                    val db = Firebase.firestore
+                    val query = db.collection("products")
+                        .document(user)
+                        .collection(category.selectedItem.toString())
+                        .document(code)
+                    query.get()
+                        .addOnSuccessListener { document ->
+                            if (document.exists()) {
+                                errorMutableLiveData.value = R.string.modifyProducts__existingCode__error
+                            } else {
+                                query.set(ProductsType(name, amount.toInt(), price.toFloat()))
+                                confirmationADDMutableLiveData.value = true
+                            }
+                        }.addOnFailureListener {
+                            showDialog_DataBaseError(context, builder)
                         }
-                    }.addOnFailureListener {
-                        showDialog_DataBaseError(context, builder)
+                } else {
+                    if (myDictionary.containsProduct(category.selectedItem.toString(), code) == 1) {
+                        errorMutableLiveData.value = R.string.modifyProducts__existingCode__error
+                    } else {
+                        val product = ProductsType(name, amount.toInt(), price.toFloat())
+                        myDictionary.setProduct(category.selectedItem.toString(), code, product)
+                        confirmationADDMutableLiveData.value = true
                     }
-            }
-            else{
-                if(myDictionary.containsProduct(category.selectedItem.toString(), code) == 1){
-                    errorMutableLiveData.value = R.string.modifyProducts__existingCode__error
-                }else{
-                    val product = ProductsType(name, amount.toInt(), price.toFloat())
-                    myDictionary.setProduct(category.selectedItem.toString(), code, product)
-                    confirmationADDMutableLiveData.value = true
                 }
             }
         }
@@ -126,74 +129,80 @@ class ModifyProductsViewModel : ViewModel() {
         else if(code.isEmpty()){
             errorMutableLiveData.value = R.string.modifyProducts__emptyCode__error
         }else{
-            val currentProduct: ProductsType?
-            val categorySTR = category.selectedItem.toString()
-            if(myDictionary.isSessionActive()){
-                val user = myDictionary.getUser()
-                val db = Firebase.firestore
-                val query = db.collection("products")
-                    .document(user)
-                    .collection(categorySTR)
-                    .document(code)
-                query.get()
-                    .addOnSuccessListener{ document ->
-                        if(document.exists()){
-                            val name: String = document.getString("name") ?: ""
-                            val amount: Int = document.getLong("amount")?.toInt() ?: 0
-                            val price: Float = document.getDouble("price")?.toFloat() ?: 0.0f
-                            proceed(ProductsType(name, amount, price), categorySTR)
-                        }else{
+            viewModelScope.launch() {
+                val currentProduct: ProductsType?
+                val categorySTR = category.selectedItem.toString()
+
+                if (myDictionary.isSessionActive()) {
+                    val user = myDictionary.getUser()
+                    val db = Firebase.firestore
+                    val query = db.collection("products")
+                        .document(user)
+                        .collection(categorySTR)
+                        .document(code)
+                    query.get()
+                        .addOnSuccessListener { document ->
+                            if (document.exists()) {
+                                val name: String = document.getString("name") ?: ""
+                                val amount: Int = document.getLong("amount")?.toInt() ?: 0
+                                val price: Float = document.getDouble("price")?.toFloat() ?: 0.0f
+                                proceed(ProductsType(name, amount, price), categorySTR)
+                            } else {
+                                errorMutableLiveData.value = R.string.modifyProducts__notExistingCode__error
+                            }
+                        }.addOnFailureListener {
+                            showDialog_DataBaseError(context, builder)
+                        }
+                    } else {
+                        if (myDictionary.containsProduct(categorySTR, code) == 1) {
+                            currentProduct = myDictionary.getProduct(categorySTR, code)
+                            proceed(currentProduct, categorySTR)
+                        } else {
                             errorMutableLiveData.value = R.string.modifyProducts__notExistingCode__error
                         }
-                    }.addOnFailureListener {
-                        showDialog_DataBaseError(context, builder)
                     }
-            }
-            else{
-                if(myDictionary.containsProduct(categorySTR, code) == 1){
-                    currentProduct = myDictionary.getProduct(categorySTR, code)
-                    proceed(currentProduct, categorySTR)
-                }else{
-                    errorMutableLiveData.value = R.string.modifyProducts__notExistingCode__error  
-                }
             }
         }
     }
 
     fun changeOperation(context: Context, builder: AlertDialog.Builder?) {
         val newProduct = ProductsType(productForChange.name, productForChange.amount.toInt(), productForChange.price.toFloat())
-        if(myDictionary.isSessionActive()){
-            val db = Firebase.firestore
+        viewModelScope.launch() {
+            if (myDictionary.isSessionActive()) {
+                val db = Firebase.firestore
 
-            if(!typeOfChange){
-                db.collection("products").document(myDictionary.getUser())
-                .collection(auxProduct.categorySTR)
-                .document(auxProduct.code)
-                .set(newProduct)
-                .addOnFailureListener {
-                    showDialog_DataBaseError(context, builder)
-                }
-            }else{
-                db.collection("products").document(myDictionary.getUser())
-                    .collection(auxProduct.categorySTR)
-                    .document(auxProduct.code)
-                    .delete()
-                    .addOnSuccessListener {
-                        db.collection("products").document(myDictionary.getUser())
-                            .collection(productForChange.categorySTR)
-                            .document(productForChange.code)
-                            .set(newProduct)
-                            .addOnFailureListener{
-                                showDialog_DataBaseError(context, builder)
+                if (!typeOfChange) {
+                    db.collection("products").document(myDictionary.getUser())
+                        .collection(auxProduct.categorySTR)
+                        .document(auxProduct.code)
+                        .set(newProduct)
+                        .addOnFailureListener {
+                            showDialog_DataBaseError(context, builder)
+                        }
+                } else {
+                    db.collection("products").document(myDictionary.getUser())
+                        .collection(auxProduct.categorySTR)
+                        .document(auxProduct.code)
+                        .delete()
+                        .addOnSuccessListener {
+                            viewModelScope.launch() {
+                                db.collection("products").document(myDictionary.getUser())
+                                    .collection(productForChange.categorySTR)
+                                    .document(productForChange.code)
+                                    .set(newProduct)
+                                    .addOnFailureListener {
+                                        showDialog_DataBaseError(context, builder)
+                                    }
                             }
-                    }
-                    .addOnFailureListener {
-                        showDialog_DataBaseError(context, builder)
-                    }
+                        }
+                        .addOnFailureListener {
+                            showDialog_DataBaseError(context, builder)
+                        }
                 }
-        }else{
-            myDictionary.deleteProduct(auxProduct.categorySTR, auxProduct.code)
-            myDictionary.setProduct(productForChange.categorySTR, productForChange.code, newProduct)
+            } else {
+                myDictionary.deleteProduct(auxProduct.categorySTR, auxProduct.code)
+                myDictionary.setProduct(productForChange.categorySTR, productForChange.code, newProduct)
+            }
         }
     }
     fun checkFieldsForChange(newCode: String, newName: String, newAmount: String, newPrice: String, newCategory: String, newCategoryPosition: Int, context: Context, builder: AlertDialog.Builder?){
@@ -210,72 +219,70 @@ class ModifyProductsViewModel : ViewModel() {
             errorMutableLiveData.value = R.string.modifyProducts__emptyNewAmount__error
         }
         else{
-            if(myDictionary.isSessionActive()){
-                if((newCode == auxProduct.code).and(newCategoryPosition == auxProduct.category)){
-                    typeOfChange = false
-                    productForChange.code = newCode
-                    productForChange.name = newName
-                    productForChange.price = newPrice
-                    productForChange.amount = newAmount
-                    productForChange.category = newCategoryPosition
-                    productForChange.categorySTR = newCategory
-                    confirmationCHANGEMutableLiveData.value = true
-                }else{
-                    val db = Firebase.firestore
-                    val query = db.collection("products")
-                        .document(myDictionary.getUser())
-                        .collection(newCategory)
-                        .document(newCode)
-                    query.get()
-                        .addOnSuccessListener{ document ->
-                            if(document.exists()){
-                                if((newCode != auxProduct.code).and(newCategoryPosition == auxProduct.category)){
-                                    errorMutableLiveData.value = R.string.modifyProducts__existingNewCodeSameCategory__error
+            viewModelScope.launch {
+                if (myDictionary.isSessionActive()) {
+                    if ((newCode == auxProduct.code).and(newCategoryPosition == auxProduct.category)) {
+                        typeOfChange = false
+                        productForChange.code = newCode
+                        productForChange.name = newName
+                        productForChange.price = newPrice
+                        productForChange.amount = newAmount
+                        productForChange.category = newCategoryPosition
+                        productForChange.categorySTR = newCategory
+                        confirmationCHANGEMutableLiveData.value = true
+                    } else {
+                        val db = Firebase.firestore
+                        val query = db.collection("products")
+                            .document(myDictionary.getUser())
+                            .collection(newCategory)
+                            .document(newCode)
+                        query.get()
+                            .addOnSuccessListener { document ->
+                                if (document.exists()) {
+                                    if ((newCode != auxProduct.code).and(newCategoryPosition == auxProduct.category)) {
+                                        errorMutableLiveData.value = R.string.modifyProducts__existingNewCodeSameCategory__error
+                                    } else {
+                                        errorMutableLiveData.value = R.string.modifyProducts__existingNewCodeDifferentCategory__error
+                                    }
+                                } else {
+                                    typeOfChange = true
+                                    productForChange.name = newName
+                                    productForChange.code = newCode
+                                    productForChange.price = newPrice
+                                    productForChange.amount = newAmount
+                                    productForChange.category = newCategoryPosition
+                                    productForChange.categorySTR = newCategory
+                                    confirmationCHANGEMutableLiveData.value = true
                                 }
-                                else{
-                                    errorMutableLiveData.value = R.string.modifyProducts__existingNewCodeDifferentCategory__error
-                                }
+                            }.addOnFailureListener {
+                                showDialog_DataBaseError(context, builder)
                             }
-                            else{
-                                typeOfChange = true
-                                productForChange.name = newName
-                                productForChange.code = newCode
-                                productForChange.price = newPrice
-                                productForChange.amount = newAmount
-                                productForChange.category = newCategoryPosition
-                                productForChange.categorySTR = newCategory
-                                confirmationCHANGEMutableLiveData.value = true
-                            }
-                        }.addOnFailureListener {
-                            showDialog_DataBaseError(context, builder)
+                    }
+                } else {
+                    var proceed = true
+                    if ((newCode != auxProduct.code).and(newCategoryPosition == auxProduct.category)) {
+                        proceed = myDictionary.containsProduct(newCategory, newCode) == 0
+                        if (!proceed) {
+                            errorMutableLiveData.value = R.string.modifyProducts__existingNewCodeSameCategory__error
                         }
-                }
-            }else{
-                var proceed = true
-                if((newCode != auxProduct.code).and(newCategoryPosition == auxProduct.category)){
-                    proceed = myDictionary.containsProduct(newCategory, newCode) == 0
-                    if(!proceed){
-                        errorMutableLiveData.value = R.string.modifyProducts__existingNewCodeSameCategory__error
+                    } else if (newCategoryPosition != auxProduct.category) {
+                        proceed = myDictionary.containsProduct(newCategory, newCode) == 0
+                        if (!proceed) {
+                            errorMutableLiveData.value = R.string.modifyProducts__existingNewCodeDifferentCategory__error
+                        }
+                    }
+                    if (proceed) {
+                        productForChange.name = newName
+                        productForChange.code = newCode
+                        productForChange.price = newPrice
+                        productForChange.amount = newAmount
+                        productForChange.category = newCategoryPosition
+                        productForChange.categorySTR = newCategory
+                        confirmationCHANGEMutableLiveData.value = true
                     }
                 }
-                else if(newCategoryPosition != auxProduct.category){
-                    proceed = myDictionary.containsProduct(newCategory, newCode) == 0
-                    if(!proceed){
-                        errorMutableLiveData.value = R.string.modifyProducts__existingNewCodeDifferentCategory__error
-                    }
-                }
-                if(proceed){
-                    productForChange.name = newName
-                    productForChange.code = newCode
-                    productForChange.price = newPrice
-                    productForChange.amount = newAmount
-                    productForChange.category = newCategoryPosition
-                    productForChange.categorySTR = newCategory
-                    confirmationCHANGEMutableLiveData.value = true
-                }
+
             }
-
-
         }
     }
     fun uploadForChange(code: String, category: Spinner, categoryPosition: Int, context: Context, builder: AlertDialog.Builder?){
@@ -287,17 +294,19 @@ class ModifyProductsViewModel : ViewModel() {
     }
 
     fun deleteOperation(context: Context, builder: AlertDialog.Builder?){
-        if(myDictionary.isSessionActive()){
-            val db = Firebase.firestore
-            db.collection("products").document(myDictionary.getUser())
-                .collection(auxProduct.categorySTR)
-                .document(auxProduct.code)
-                .delete()
-                .addOnFailureListener {
-                    showDialog_DataBaseError(context, builder)
-                }
-        }else{
-            myDictionary.deleteProduct(auxProduct.categorySTR, auxProduct.code)
+        viewModelScope.launch() {
+            if(myDictionary.isSessionActive()){
+                val db = Firebase.firestore
+                db.collection("products").document(myDictionary.getUser())
+                    .collection(auxProduct.categorySTR)
+                    .document(auxProduct.code)
+                    .delete()
+                    .addOnFailureListener {
+                        showDialog_DataBaseError(context, builder)
+                    }
+            }else{
+                myDictionary.deleteProduct(auxProduct.categorySTR, auxProduct.code)
+            }
         }
     }
 }
