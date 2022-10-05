@@ -78,7 +78,8 @@ class ChangePasswordViewModel : ViewModel() {
                                             Log.e("errorCode", errorCode)
                                             Log.e("errorMessage", errorMessage ?: "")
                                             when(errorCode){
-                                                "ERROR_INVALID_CREDENTIAL" -> warningWrongMutableLiveData.value = R.string.changePassword__wrongCurrentPassword
+                                                "ERROR_INVALID_CREDENTIAL" -> warningWrongMutableLiveData.value = R.string.changePassword__wrongCredentials
+                                                "ERROR_WRONG_PASSWORD" -> warningWrongMutableLiveData.value = R.string.changePassword__wrongCurrentPassword
                                                 else -> showDialog_DataBaseError(context, builder)
                                             }
                                         }

@@ -48,7 +48,7 @@ class LogInFragment : Fragment() {
             }
 
             logInViewModel.successLogInLiveData.observe(this@LogInFragment){
-                logInUserEditText.setText("")
+                logInUserTextInputEditText.setText("")
                 loginPasswordTextInputEditText.setText("")
                 warningTextView.text = ""
                 runBlocking {
@@ -60,7 +60,7 @@ class LogInFragment : Fragment() {
             }
 
             logInLogInButton.setOnClickListener {
-                val user = logInUserEditText.text.toString()
+                val user = logInUserTextInputEditText.text.toString()
                 val password = loginPasswordTextInputEditText.text.toString()
                 logInViewModel.logInOperation(user, password, this@LogInFragment.requireContext(), builder)
             }

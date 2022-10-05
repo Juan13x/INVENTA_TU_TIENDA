@@ -92,6 +92,7 @@ class ModifyProductsFragment : Fragment() {
 
                 confirmationADDLiveData.observe(this@ModifyProductsFragment){
                     confirmationWhenAdd(builder)
+                    mainViewModel.setProductChange()
                 }
                 confirmationUploadCHANGELiveData.observe(this@ModifyProductsFragment){
                     confirmationWhenUploadOnChange()
@@ -208,6 +209,7 @@ class ModifyProductsFragment : Fragment() {
                 ?.setTitle(R.string.modifyProducts__change__text)
                 ?.setPositiveButton(R.string.modifyProducts__positiveOption__dialog){ _, _ ->
                     confirmationWhenChange(myContext, builder)
+                    mainViewModel.setProductChange()
                 }
                 ?.setNegativeButton(R.string.modifyProducts__negativeOption__dialog){ _, _ -> }
             builder?.create()?.show()
@@ -281,6 +283,7 @@ class ModifyProductsFragment : Fragment() {
                 ?.setTitle(R.string.modifyProducts__change__text)
                 ?.setPositiveButton(R.string.modifyProducts__positiveOption__dialog){ _, _ ->
                     confirmationWhenDelete(myContext, builder)
+                    mainViewModel.setProductChange()
                 }
                 ?.setNegativeButton(R.string.modifyProducts__negativeOption__dialog){ _, _ -> }
             builder?.create()?.show()

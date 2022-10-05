@@ -7,6 +7,9 @@
     <string name="database_unknownAndUnIdentifiedError">Unknown or unclassified Error</string>
     <string name="database__unknownError__error">Error Unknown by the Database</string>
     <string name="database__expiredSession__error">Session Expired. Enter your Credentials again.</string>
+    <string name="database__defaultCategoryName">Your Category</string>
+    <string name="database__defaultCategoryTableCloudDatabase">categories</string>
+    <string name="database__defaultProductTableCloudDatabase">products</string>
     <!--UI-->
     <!--TEXT-->
     <string name="app_name">INVENTA TU TIENDA</string>

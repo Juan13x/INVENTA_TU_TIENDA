@@ -9,9 +9,17 @@ import androidx.lifecycle.viewModelScope
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.getField
 import com.google.firebase.ktx.Firebase
+import com.juanguicj.inventa_tu_tienda.R
 import kotlinx.coroutines.launch
 
 class MainViewModel: ViewModel() {
+    fun database() {
+        viewModelScope.launch {
+            myDictionary.create()
+            isSessionActive()
+        }
+    }
+
     private val productChangeMutableLiveData: MutableLiveData<Boolean> = MutableLiveData()
     val productChangeLiveData: MutableLiveData<Boolean> = productChangeMutableLiveData
     private val categoryChangeMutableLiveData: MutableLiveData<Boolean> = MutableLiveData()
@@ -26,8 +34,40 @@ class MainViewModel: ViewModel() {
         categoryChangeMutableLiveData.value = true
     }
 
+    fun setProductChange() {
+        productChangeMutableLiveData.value = true
+    }
+
     fun setSimpleLogin(){
         logInMainMutableLiveData.value = true
+    }
+
+    fun setSignUp(user: String, context: Context, builder: AlertDialog.Builder?){
+        viewModelScope.launch {
+            myDictionary.setUser(user)
+            myDictionary.clearCategory()
+            val db = Firebase.firestore
+            db.collection("categories")
+                .document(user)
+                .set(hashMapOf("0" to arrayListOf(defaultTableCloudDatabaseName)))
+                .addOnSuccessListener {
+                    db.collection("products")
+                        .document(user)
+                        .collection(defaultTableCloudDatabaseName)
+                        .document("0")
+                        .set(ProductsType("0", 0, 0.0f))
+                        .addOnFailureListener{
+                            clearLoginMain()
+                            showDialog_DataBaseError(context, builder)
+                        }
+                }
+                .addOnFailureListener {
+                    clearLoginMain()
+                    showDialog_DataBaseError(context, builder)
+                }
+
+            logInMainMutableLiveData.value = true
+        }
     }
 
     fun setLogin(user: String){

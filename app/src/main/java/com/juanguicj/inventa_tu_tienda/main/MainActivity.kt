@@ -21,8 +21,6 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        myDictionary.create() //just for testing
-        //myCloudDataBase.create() //just for testing
         val builder: AlertDialog.Builder = this.let{
             AlertDialog.Builder(it)
         }
@@ -66,6 +64,9 @@ class MainActivity : AppCompatActivity() {
 
     override fun onStart(){
         super.onStart()
-        mainViewModel.isSessionActive()
+        defaultTableCloudDatabaseName = getString(R.string.database__defaultCategoryName)
+        categoryTableCloudDatabase = getString(R.string.database__defaultCategoryTableCloudDatabase)
+        productTableCloudDatabase = getString(R.string.database__defaultProductTableCloudDatabase)
+        mainViewModel.database()
     }
 }

@@ -83,6 +83,7 @@ class ModifyCategoryFragment : Fragment() {
 
                 modifyCategoriesAddButton.setOnClickListener {
                     showRenameFields()
+                    modifyCategoriesSelectedCategoryInfoTextView.text = getString(R.string.modifyCategories__SelectedCategoryInfo_ADD__text)
                     modifyCategoriesOperateButton.text = getString(R.string.modifyCategories__add__text)
                     modifyCategoriesOperateButton.setOnClickListener {
                         ADD_operation(modifyCategoriesNewCategoryEditText.text.toString(), myContext, builder)
@@ -90,6 +91,7 @@ class ModifyCategoryFragment : Fragment() {
                 }
                 modifyCategoriesDeleteButton.setOnClickListener {
                     hideRenameFields()
+                    modifyCategoriesSelectedCategoryInfoTextView.text = getString(R.string.modifyCategories__selectedCategoryInfo_DEFAULT__text)
                     modifyCategoriesOperateButton.text = getString(R.string.modifyCategories__erase__text)
                     modifyCategoriesOperateButton.setOnClickListener {
                         checkFields_for_ERASE(modifyCategoriesSelectedCategorySpinner)
@@ -97,6 +99,7 @@ class ModifyCategoryFragment : Fragment() {
                 }
                 modifyCategoriesRenameButton.setOnClickListener {
                     showRenameFields()
+                    modifyCategoriesSelectedCategoryInfoTextView.text = getString(R.string.modifyCategories__selectedCategoryInfo_DEFAULT__text)
                     modifyCategoriesOperateButton.text = getString(R.string.modifyCategories__rename__text)
                     modifyCategoriesOperateButton.setOnClickListener {
                         val selectedCategory = modifyCategoriesSelectedCategorySpinner.selectedItem.toString()

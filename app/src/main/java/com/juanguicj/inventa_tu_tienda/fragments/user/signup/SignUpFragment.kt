@@ -39,6 +39,7 @@ class SignUpFragment : Fragment() {
         val builder: AlertDialog.Builder? = activity.let {
             AlertDialog.Builder(it)
         }
+        val context = this.requireContext()
 
         signUPViewModel = ViewModelProvider(this)[SignUpViewModel::class.java]
 
@@ -71,7 +72,7 @@ class SignUpFragment : Fragment() {
                 signUpRepeatPasswordTextInputEditText.setText("")
                 runBlocking {
                     launch {
-                        mainViewModel.setLogin(myDictionary.getUser())
+                        mainViewModel.setSignUp(myDictionary.getUser(), context, builder)
                     }
                 }
             }

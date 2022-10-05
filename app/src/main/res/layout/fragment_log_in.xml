@@ -6,49 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".fragments.user.login.LogInFragment">
 
-    <TextView
-        android:id="@+id/logIn_userInfo_textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:text="@string/logIn_userInfo__text"
-        android:textColor="@color/Black"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="@+id/logIn_user_editText"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <EditText
-        android:id="@+id/logIn_user_editText"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:autofillHints=""
-        android:ems="10"
-        android:hint="@string/logIn_user__hint"
-        android:inputType="textEmailAddress"
-        android:maxLength="@integer/max_length_email"
-        android:textColor="@color/Black"
-        android:textColorHint="@color/Dark_Orange"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/logIn_userInfo_textView"
-        tools:ignore="TouchTargetSizeCheck" />
-
-    <TextView
-        android:id="@+id/logIn_passwordInfo_textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:text="@string/logIn_passwordInfo__text"
-        android:textColor="@color/Black"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="@+id/logIn_password_textInputLayout"
-        app:layout_constraintTop_toBottomOf="@+id/logIn_user_editText" />
-
     <Button
         android:id="@+id/logIn_logIn_button"
         android:layout_width="wrap_content"
@@ -78,13 +35,14 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
+        android:layout_marginTop="32dp"
         android:layout_marginEnd="16dp"
         android:hint="@string/logIn_password__hint"
         android:textColorHint="@color/Dark_Orange"
         app:endIconMode="password_toggle"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/logIn_passwordInfo_textView">
+        app:layout_constraintTop_toBottomOf="@+id/textInputLayout">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/login_password_textInputEditText"
@@ -96,5 +54,25 @@
             android:textColor="@color/Black"
             android:textStyle="bold"
             tools:ignore="TouchTargetSizeCheck,TextContrastCheck" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textInputLayout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="16dp"
+        android:hint="@string/logIn_user__hint"
+        android:textColorHint="@color/Dark_Orange"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/logIn_user_textInputEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textStyle="bold" />
     </com.google.android.material.textfield.TextInputLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -18,8 +18,9 @@
     <string name="modifyCategories__add__text">Add</string>
     <string name="modifyCategories__rename__text">Rename</string>
     <string name="modifyCategories__erase__text">Erase</string>
-    <string name="modifyCategories__selectedCategoryInfo__text">Select a Category</string>
+    <string name="modifyCategories__selectedCategoryInfo_DEFAULT__text">Select a Category</string>
     <string name="modifyCategories__newCategoryInfo__text">New Category Name</string>
+    <string name="modifyCategories__SelectedCategoryInfo_ADD__text">Existing Categories Names</string>
     <string name="modifyCategories__operate__defaultText">Add</string>
     <!--HINT-->
     <string name="modifyCategories__newCategory__hint">Enter the name</string>

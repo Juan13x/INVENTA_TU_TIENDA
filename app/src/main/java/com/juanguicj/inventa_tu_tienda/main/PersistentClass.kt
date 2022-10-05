@@ -2,6 +2,8 @@ package com.juanguicj.inventa_tu_tienda.main
 
 import com.juanguicj.inventa_tu_tienda.persistance.LocalRepository
 import com.juanguicj.inventa_tu_tienda.persistance.category.Category
+import com.juanguicj.inventa_tu_tienda.persistance.products.Product
+import com.juanguicj.inventa_tu_tienda.persistance.products.ProductDAO
 import com.juanguicj.inventa_tu_tienda.persistance.user.User
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
@@ -10,6 +12,7 @@ class PersistentClass{
     private val systemName = "systemName"
     private val myUserDAO = LocalRepository.user_db.userDAO()
     private val myCategoryDAO = LocalRepository.category_db.categoryDAO()
+    private val myProductDAO = LocalRepository.product_db.productDAO()
 
     private suspend fun isUserTableCreated(): Boolean{
         return this.myUserDAO.checkTableCreated(this.systemName) != 0
@@ -45,62 +48,59 @@ class PersistentClass{
      * Check if the persistent DataBase already exists, otherwise
      * it is created
      */
-    fun create():Boolean{
-        runBlocking{
-            launch {
-                if(!this@PersistentClass.isUserTableCreated()){
-                    this@PersistentClass.clearUser()
-                    this@PersistentClass.addCategory("Aseo")
-                    this@PersistentClass.addCategory("Comida")
-                    this@PersistentClass.addCategory("Revuelto")
-                }
-            }
-        }
+    suspend fun create():Boolean{
+        if(!this@PersistentClass.isUserTableCreated()){
+            this@PersistentClass.clearUser()
+            this@PersistentClass.addCategory("Aseo")
+            this@PersistentClass.addCategory("Comida")
+            this@PersistentClass.addCategory("Revuelto")
 
-//        this.addCategory("Aseo")
-//        this.addCategory("Comida")
-//        this.addCategory("Revuelto")
-//
-//        this.setProduct(
-//            "Aseo",
-//            "101",
-//            ProductsType("Fabuloso 400ml", 12, 1400.0f))
-//        this.setProduct(
-//            "Aseo",
-//            "102",
-//            ProductsType("Limpido 400ml", 10, 1300.0f))
-//        this.setProduct(
-//            "Aseo",
-//            "103",
-//            ProductsType("Fabuloso 250ml", 20, 1000.0f))
-//
-//        this.setProduct(
-//            "Comida",
-//            "201",
-//            ProductsType("Arroz libra", 25, 2000.0f))
-//        this.setProduct(
-//            "Comida",
-//            "202",
-//            ProductsType("Leche Colanta", 8, 3600.0f))
-//        this.setProduct(
-//            "Comida",
-//            "203",
-//            ProductsType("Lecherita tubito", 26, 800.0f))
-//
-//        this.setProduct(
-//            "Revuelto",
-//            "301",
-//            ProductsType("Tomate", 2, 2200.0f))
-//        this.setProduct(
-//            "Revuelto",
-//            "302",
-//            ProductsType("Papa", 10, 1700.0f))
-//        this.setProduct(
-//            "Revuelto",
-//            "303",
-//            ProductsType("Limon", 3, 2500.0f))
+            this@PersistentClass.addCategory("Aseo")
+            this@PersistentClass.addCategory("Comida")
+            this@PersistentClass.addCategory("Revuelto")
+
+            this@PersistentClass.setProduct(
+                "Aseo",
+                "101",
+                ProductsType("Fabuloso 400ml", 12, 1400.0f))
+            this@PersistentClass.setProduct(
+                "Aseo",
+                "102",
+                ProductsType("Limpido 400ml", 10, 1300.0f))
+            this@PersistentClass.setProduct(
+                "Aseo",
+                "103",
+                ProductsType("Fabuloso 250ml", 20, 1000.0f))
+
+            this@PersistentClass.setProduct(
+                "Comida",
+                "201",
+                ProductsType("Arroz libra", 25, 2000.0f))
+            this@PersistentClass.setProduct(
+                "Comida",
+                "202",
+                ProductsType("Leche Colanta", 8, 3600.0f))
+            this@PersistentClass.setProduct(
+                "Comida",
+                "203",
+                ProductsType("Lecherita tubito", 26, 800.0f))
+
+            this@PersistentClass.setProduct(
+                "Revuelto",
+                "301",
+                ProductsType("Tomate", 2, 2200.0f))
+            this@PersistentClass.setProduct(
+                "Revuelto",
+                "302",
+                ProductsType("Papa", 10, 1700.0f))
+            this@PersistentClass.setProduct(
+                "Revuelto",
+                "303",
+                ProductsType("Limon", 3, 2500.0f))
+            }
         return false
     }
+
 
     /**
      * Check if the category input is included
@@ -167,7 +167,7 @@ class PersistentClass{
      */
     suspend fun containsProduct(category: String, code:String): Int{
         return if(containsCategory(category)){
-            if(this.dictionary[category]?.containsKey(code) == true) 1 else 0
+            if(myProductDAO.isProductIncluded(category, code) > 0) 1 else 0
         }
         else{
             2
@@ -177,10 +177,17 @@ class PersistentClass{
     /**
      * Add a new product to a specific category
      */
-    suspend fun setProduct(category:String, setCode: String, newProduct: ProductsType): Boolean{
+    suspend fun setProduct(category:String, setCode: String, features: ProductsType): Boolean{
         val check = containsCategory(category)
         if(check){
-            this.dictionary[category]?.set(setCode, newProduct)
+            val newProduct = Product(
+                code = setCode,
+                category = category,
+                name = features.name,
+                amount = features.amount,
+                price = features.price
+            )
+            myProductDAO.setProduct(newProduct)
         }
         return check
     }
@@ -194,7 +201,8 @@ class PersistentClass{
     suspend fun getProduct(category:String, getCode: String): ProductsType? {
         val check = containsProduct(category, getCode)
         if(check == 1){
-            return this.dictionary[category]?.get(getCode)
+            val product = myProductDAO.getProduct(category, getCode)
+            return ProductsType(name = product.name, amount = product.amount, price = product.price)
         }
         return null
     }
@@ -206,7 +214,7 @@ class PersistentClass{
     suspend fun deleteProduct(category:String, code: String):Int{
         val check = containsProduct(category, code)
         if(check == 1){
-            this.dictionary[category]?.remove(code)
+            myProductDAO.deleteProduct(category,code)
         }
         return check
     }
@@ -219,7 +227,11 @@ class PersistentClass{
      */
     suspend fun getAllProducts(category: String): MutableMap<String, ProductsType>?{
         return if(containsCategory(category)) {
-            val products = this.dictionary[category]
+            var products : MutableMap<String, ProductsType>? = mutableMapOf("" to ProductsType("",0, 0.0f))
+            val data = myProductDAO.getAllProducts(category)
+            for(prod in data){
+                products?.set(prod.code, ProductsType(prod.name,prod.amount,prod.price))
+            }
             products?.remove("")
             products
         }

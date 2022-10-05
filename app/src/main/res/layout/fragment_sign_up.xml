@@ -6,54 +6,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".fragments.user.signup.SignUpFragment">
 
-    <TextView
-        android:id="@+id/signUp_userInfo_textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:text="@string/signUp_userInfo__text"
-        android:textColor="@color/Black"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="@+id/signUp_user_editText"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <EditText
-        android:id="@+id/signUp_user_editText"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:autofillHints=""
-        android:ems="10"
-        android:hint="@string/signUp_user__hint"
-        android:inputType="textEmailAddress"
-        android:maxLength="@integer/max_length_email"
-        android:textColor="@color/Black"
-        android:textColorHint="@color/Dark_Orange"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/signUp_userInfo_textView"
-        tools:ignore="TouchTargetSizeCheck" />
-
-    <TextView
-        android:id="@+id/signUp_passwordInfo_textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:text="@string/signUp_passwordInfo__text"
-        android:textColor="@color/Black"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="@+id/signUp_password_textInputLayout"
-        app:layout_constraintTop_toBottomOf="@+id/signUp_user_editText" />
-
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/signUp_password_textInputLayout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
+        android:layout_marginTop="32dp"
         android:layout_marginEnd="16dp"
         android:hint="@string/signUp_password__hint"
         android:textColorHint="@color/Dark_Orange"
@@ -64,7 +22,7 @@
         app:errorIconTint="@color/Red"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/signUp_passwordInfo_textView">
+        app:layout_constraintTop_toBottomOf="@+id/textInputLayout2">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/signUp_password_TextInputEditText"
@@ -88,23 +46,12 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/signUp_repeatPassword_textInputLayout" />
 
-    <TextView
-        android:id="@+id/signUp_repeatPasswordInfo_textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:text="@string/signUp_repeatPasswordInfo__text"
-        android:textColor="@color/Black"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="@+id/signUp_repeatPassword_textInputLayout"
-        app:layout_constraintTop_toBottomOf="@+id/signUp_password_textInputLayout" />
-
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/signUp_repeatPassword_textInputLayout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
+        android:layout_marginTop="32dp"
         android:layout_marginEnd="16dp"
         android:hint="@string/signUp_repeatPasswordInfo__text"
         android:textColorHint="@color/Dark_Orange"
@@ -114,7 +61,7 @@
         app:errorIconTint="@color/Red"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/signUp_repeatPasswordInfo_textView">
+        app:layout_constraintTop_toBottomOf="@+id/signUp_password_textInputLayout">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/signUp_repeatPassword_TextInputEditText"
@@ -125,6 +72,27 @@
             android:maxLength="@integer/max_length_password"
             android:textStyle="bold"
             tools:ignore="DuplicateSpeakableTextCheck,TextContrastCheck" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textInputLayout2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="16dp"
+        android:hint="@string/signUp_user__hint"
+        android:textColorHint="@color/Dark_Orange"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/signUp_user_editText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            tools:ignore="TouchTargetSizeCheck" />
     </com.google.android.material.textfield.TextInputLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
