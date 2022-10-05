@@ -41,7 +41,7 @@ class ModifyCategoryViewModel : ViewModel() {
                     if(myDictionary.isSessionActive()){
                         val db = Firebase.firestore
                         categories.apply { add(nameCategory) }
-                        db.collection("categories")
+                        db.collection(categoryTableCloudDatabase)
                             .document(myDictionary.getUser())
                             .set(hashMapOf("0" to categories))
                             .addOnSuccessListener{
@@ -78,7 +78,7 @@ class ModifyCategoryViewModel : ViewModel() {
                     val db = Firebase.firestore
                     val index = categories.indexOf(currentCategory)
                     categories[index] = newName
-                    db.collection("categories")
+                    db.collection(categoryTableCloudDatabase)
                         .document(myDictionary.getUser())
                         .set(hashMapOf("0" to categories))
                         .addOnSuccessListener{
@@ -110,7 +110,7 @@ class ModifyCategoryViewModel : ViewModel() {
             if(myDictionary.isSessionActive()){
                 val db = Firebase.firestore
                 categories.remove(selectedCategory)
-                db.collection("categories")
+                db.collection(categoryTableCloudDatabase)
                     .document(myDictionary.getUser())
                     .set(hashMapOf("0" to categories))
                     .addOnSuccessListener {

@@ -47,11 +47,11 @@ class MainViewModel: ViewModel() {
             myDictionary.setUser(user)
             myDictionary.clearCategory()
             val db = Firebase.firestore
-            db.collection("categories")
+            db.collection(categoryTableCloudDatabase)
                 .document(user)
                 .set(hashMapOf("0" to arrayListOf(defaultTableCloudDatabaseName)))
                 .addOnSuccessListener {
-                    db.collection("products")
+                    db.collection(productTableCloudDatabase)
                         .document(user)
                         .collection(defaultTableCloudDatabaseName)
                         .document("0")
@@ -90,7 +90,7 @@ class MainViewModel: ViewModel() {
     fun getCategoriesFromDataBase(context: Context, builder: AlertDialog.Builder?){
         val db = Firebase.firestore
         viewModelScope.launch {
-            db.collection("categories")
+            db.collection(categoryTableCloudDatabase)
                 .document(myDictionary.getUser())
                 .get()
                 .addOnCompleteListener{ task ->

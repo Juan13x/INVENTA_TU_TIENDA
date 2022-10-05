@@ -75,7 +75,7 @@ class ModifyProductsViewModel : ViewModel() {
                 if (myDictionary.isSessionActive()) {
                     val user = myDictionary.getUser()
                     val db = Firebase.firestore
-                    val query = db.collection("products")
+                    val query = db.collection(productTableCloudDatabase)
                         .document(user)
                         .collection(category.selectedItem.toString())
                         .document(code)
@@ -136,7 +136,7 @@ class ModifyProductsViewModel : ViewModel() {
                 if (myDictionary.isSessionActive()) {
                     val user = myDictionary.getUser()
                     val db = Firebase.firestore
-                    val query = db.collection("products")
+                    val query = db.collection(productTableCloudDatabase)
                         .document(user)
                         .collection(categorySTR)
                         .document(code)
@@ -172,7 +172,7 @@ class ModifyProductsViewModel : ViewModel() {
                 val db = Firebase.firestore
 
                 if (!typeOfChange) {
-                    db.collection("products").document(myDictionary.getUser())
+                    db.collection(productTableCloudDatabase).document(myDictionary.getUser())
                         .collection(auxProduct.categorySTR)
                         .document(auxProduct.code)
                         .set(newProduct)
@@ -180,13 +180,13 @@ class ModifyProductsViewModel : ViewModel() {
                             showDialog_DataBaseError(context, builder)
                         }
                 } else {
-                    db.collection("products").document(myDictionary.getUser())
+                    db.collection(productTableCloudDatabase).document(myDictionary.getUser())
                         .collection(auxProduct.categorySTR)
                         .document(auxProduct.code)
                         .delete()
                         .addOnSuccessListener {
                             viewModelScope.launch() {
-                                db.collection("products").document(myDictionary.getUser())
+                                db.collection(productTableCloudDatabase).document(myDictionary.getUser())
                                     .collection(productForChange.categorySTR)
                                     .document(productForChange.code)
                                     .set(newProduct)
@@ -232,7 +232,7 @@ class ModifyProductsViewModel : ViewModel() {
                         confirmationCHANGEMutableLiveData.value = true
                     } else {
                         val db = Firebase.firestore
-                        val query = db.collection("products")
+                        val query = db.collection(productTableCloudDatabase)
                             .document(myDictionary.getUser())
                             .collection(newCategory)
                             .document(newCode)
@@ -297,7 +297,7 @@ class ModifyProductsViewModel : ViewModel() {
         viewModelScope.launch() {
             if(myDictionary.isSessionActive()){
                 val db = Firebase.firestore
-                db.collection("products").document(myDictionary.getUser())
+                db.collection(productTableCloudDatabase).document(myDictionary.getUser())
                     .collection(auxProduct.categorySTR)
                     .document(auxProduct.code)
                     .delete()

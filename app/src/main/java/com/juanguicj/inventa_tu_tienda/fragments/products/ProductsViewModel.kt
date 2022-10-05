@@ -13,10 +13,7 @@ import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.juanguicj.inventa_tu_tienda.fragments.modify.products.*
-import com.juanguicj.inventa_tu_tienda.main.ProductsType
-import com.juanguicj.inventa_tu_tienda.main.categories
-import com.juanguicj.inventa_tu_tienda.main.myDictionary
-import com.juanguicj.inventa_tu_tienda.main.showDialog_DataBaseError
+import com.juanguicj.inventa_tu_tienda.main.*
 import kotlinx.coroutines.launch
 
 class ProductsViewModel : ViewModel() {
@@ -90,7 +87,7 @@ class ProductsViewModel : ViewModel() {
         viewModelScope.launch() {
             if(myDictionary.isSessionActive()){
                 val db = Firebase.firestore
-                db.collection("products")
+                db.collection(productTableCloudDatabase)
                     .document(myDictionary.getUser())
                     .collection(myDictionary.getCategory())
                     .get().addOnSuccessListener { query ->

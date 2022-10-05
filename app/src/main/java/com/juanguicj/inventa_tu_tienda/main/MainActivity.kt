@@ -25,6 +25,10 @@ class MainActivity : AppCompatActivity() {
             AlertDialog.Builder(it)
         }
 
+        defaultTableCloudDatabaseName = getString(R.string.database__defaultCategoryName)
+        categoryTableCloudDatabase = getString(R.string.database__defaultCategoryTableCloudDatabase)
+        productTableCloudDatabase = getString(R.string.database__defaultProductTableCloudDatabase)
+
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -64,9 +68,6 @@ class MainActivity : AppCompatActivity() {
 
     override fun onStart(){
         super.onStart()
-        defaultTableCloudDatabaseName = getString(R.string.database__defaultCategoryName)
-        categoryTableCloudDatabase = getString(R.string.database__defaultCategoryTableCloudDatabase)
-        productTableCloudDatabase = getString(R.string.database__defaultProductTableCloudDatabase)
         mainViewModel.database()
     }
 }
