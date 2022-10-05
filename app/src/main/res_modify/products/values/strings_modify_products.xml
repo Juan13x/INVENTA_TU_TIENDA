@@ -48,7 +48,7 @@
 
     <!--UI-->
     <!--Filters-->
-    <string name="modifyProducts__filter">QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklñzxcvbnm1234567890_áéíóúÁÉÍÓÚ</string>
+    <string name="modifyProducts__filter">QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklñzxcvbnm -*+/1234567890_áéíóúÁÉÍÓÚ</string>
     <!--TEXT-->
     <string name="modifyProducts__add__text">Add</string>
     <string name="modifyProducts__see__text">See</string>
