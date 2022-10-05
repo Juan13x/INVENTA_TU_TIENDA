@@ -14,7 +14,7 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.juanguicj.inventa_tu_tienda.fragments.modify.products.*
 import com.juanguicj.inventa_tu_tienda.main.ProductsType
-import com.juanguicj.inventa_tu_tienda.main.myCloudDataBase
+import com.juanguicj.inventa_tu_tienda.main.categories
 import com.juanguicj.inventa_tu_tienda.main.myDictionary
 import com.juanguicj.inventa_tu_tienda.main.showDialog_DataBaseError
 import kotlinx.coroutines.launch
@@ -31,19 +31,12 @@ class ProductsViewModel : ViewModel() {
 
 
     fun getCategoryList(listView: ListView, context: Context){
-        viewModelScope.launch(){
-            val categories = if(myDictionary.isSessionActive()){
-                myCloudDataBase.getCategories(myDictionary.getUser())?.toMutableList()
-            }else{
-                myDictionary.getCategories().toMutableList()
-            }
-            if(categories.isNullOrEmpty()){
-                errorCategoryMutableLiveData.value = true
-                listView.adapter = null
-            } else{
-                val adapter = ArrayAdapter(context, R.layout.simple_list_item_1, categories)
-                listView.adapter = adapter
-            }
+        if(categories.isNullOrEmpty()){
+            errorCategoryMutableLiveData.value = true
+            listView.adapter = null
+        } else{
+            val adapter = ArrayAdapter(context, R.layout.simple_list_item_1, categories)
+            listView.adapter = adapter
         }
     }
 

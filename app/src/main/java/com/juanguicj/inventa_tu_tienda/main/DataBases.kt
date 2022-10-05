@@ -14,7 +14,7 @@ val auth: FirebaseAuth = Firebase.auth
 val categories: ArrayList<String> = ArrayList()
 
 val myDictionary = PersistentClass()
-val myCloudDataBase = CloudDataBase()
+//val myCloudDataBase = CloudDataBase()
 
 data class ProductsType(val name: String, val amount: Int, val price: Float)
 

@@ -22,7 +22,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         myDictionary.create() //just for testing
-        myCloudDataBase.create() //just for testing
+        //myCloudDataBase.create() //just for testing
         val builder: AlertDialog.Builder = this.let{
             AlertDialog.Builder(it)
         }
